@@ -1,0 +1,35 @@
+name: dart test (chapose)
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'chapose/**'
+      - '.github/workflows/chapose_test.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'chapose/**'
+      - '.github/workflows/chapose_test.yml'
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: chapose
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - run: dart pub get
+      - run: dart format --output=none --set-exit-if-changed .
+      - run: dart analyze
+      - run: dart test

@@ -1,0 +1,80 @@
+name: chapose release (windows)
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag (format: chapose-vX.Y.Z)
+        required: true
+        type: string
+      build_run_id:
+        description: Build workflow run ID to consume artifacts from
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  validate:
+    name: Validate Tag And Version
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+      - name: Validate tag format
+        run: |
+          if [[ ! "${{ inputs.tag }}" =~ ^chapose-v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Error: invalid tag format '${{ inputs.tag }}'. Expected chapose-vX.Y.Z"
+            exit 1
+          fi
+      - name: Validate tag version matches pubspec
+        run: |
+          APP_VERSION=$(grep '^version:' chapose/pubspec.yaml | sed 's/version: //g' | tr -d '[:space:]')
+          APP_VERSION_BASE="${APP_VERSION%%+*}"
+          TAG_VERSION="${{ inputs.tag }}"
+          TAG_VERSION="${TAG_VERSION#chapose-v}"
+          if [ "${TAG_VERSION}" != "${APP_VERSION_BASE}" ]; then
+            echo "Expected tag: chapose-v${APP_VERSION_BASE}"
+            exit 1
+          fi
+
+  release:
+    name: Draft GitHub Release
+    runs-on: ubuntu-22.04
+    needs: validate
+    steps:
+      - name: Download build artifacts by run ID
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ inputs.build_run_id }}
+          pattern: chapose-windows-*
+          path: dist
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Pack artifacts as zip
+        run: |
+          mkdir -p release-assets
+          for dir in dist/*; do
+            if [ -d "$dir" ]; then
+              name=$(basename "$dir")
+              (cd "$dir" && zip -r "../../release-assets/${name}.zip" .)
+            fi
+          done
+      - name: Generate SHA256 checksums
+        run: |
+          sha256sum release-assets/*.zip > release-assets/SHA256SUMS-windows.txt
+      - name: Create or update draft release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag }}
+          name: ${{ inputs.tag }}
+          draft: true
+          generate_release_notes: true
+          files: |
+            release-assets/*.zip
+            release-assets/SHA256SUMS-windows.txt
