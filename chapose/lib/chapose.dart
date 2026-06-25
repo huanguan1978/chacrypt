@@ -25,6 +25,8 @@ import 'package:fastcrypt/fastcrypt.dart';
 import 'package:basic_message/basic_message.dart';
 import 'package:path/path.dart' as p;
 
+export 'src/version.g.dart';
+
 part 'src/message/provider.dart';
 part 'src/message/definition.dart';
 part 'src/thirdparty/patching.dart';

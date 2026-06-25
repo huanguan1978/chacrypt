@@ -50,6 +50,11 @@ jobs:
         with:
           sdk: stable
       - run: dart pub get
+      - name: Generate version.g.dart
+        run: |
+          cat > lib/src/version.g.dart <<EOF
+          const String packageVersion = '${{ needs.get_version.outputs.app_version }}';
+          EOF
       - name: Compile executable
         run: |
           EXECUTABLE_NAME="chapose-${{ needs.get_version.outputs.app_version_base }}-macos-x64"
@@ -93,6 +98,11 @@ jobs:
         with:
           sdk: stable
       - run: dart pub get
+      - name: Generate version.g.dart
+        run: |
+          cat > lib/src/version.g.dart <<EOF
+          const String packageVersion = '${{ needs.get_version.outputs.app_version }}';
+          EOF
       - name: Compile executable
         run: |
           EXECUTABLE_NAME="chapose-${{ needs.get_version.outputs.app_version_base }}-macos-arm64"
