@@ -1,0 +1,39 @@
+name: chapose
+description: A high-performance CLI tool for secure file encryption/decryption. Powered by ChaCha20-Poly1305, it provides robust, efficient, and reliable protection for professional users.
+version: 1.0.0
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+repository: https://github.com/huanguan1978/chacrypt
+issue_tracker: https://github.com/huanguan1978/chacrypt/issues
+
+funding:
+  - https://github.com/sponsors/huanguan1978
+
+resolution: workspace
+environment:
+  sdk: '>=3.5.0 <4.0.0'
+
+executables:
+  chapose: chapose
+
+topics:
+  - crypto
+  - security
+  - privacy
+  - secure-storage
+  - encryption
+  - decryption
+
+# Add regular dependencies here.
+dependencies:
+  fastcrypt: ^1.0.0
+  crypto: ^3.0.7
+  args: ^2.7.0
+  path: ^1.9.1
+  intl: ^0.20.2
+
+  basic_message: ^1.0.1
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.6
