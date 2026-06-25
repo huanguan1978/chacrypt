@@ -1,0 +1,12 @@
+name: chacrypt
+publish_to: none 
+
+environment:
+  sdk: '>=3.5.0 <4.0.0'
+
+workspace:
+  - chapose
+#   - chabox
+# dependencies:
+#   mime: ^2.0.0
+#   command_it: ^9.5.1
