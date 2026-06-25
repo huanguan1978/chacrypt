@@ -153,7 +153,6 @@ String getOutputLocation(
 /// Validates the output file path and returns a tuple indicating whether it is valid and an error message if not.
 (bool, String) checkOutputLocation(
   String outputLocation, {
-
   bool outputOverwrite = false,
   String sourceLocation = '',
 }) {
