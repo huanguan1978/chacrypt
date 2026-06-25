@@ -5,8 +5,7 @@ class KeyfileCommand extends Command {
   final String name = 'keyfile';
 
   @override
-  final String description =
-      'Keyfile generate for encryption | decryption.\n\n'
+  final String description = 'Keyfile generate for encryption | decryption.\n\n'
       "e.g. generate a default keyfile (chapose.key). \n"
       "  chapose keyfile \n\n"
       "e.g. custom output and force overwrite. \n"

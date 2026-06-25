@@ -5,8 +5,7 @@ class DecryptCommand extends Command {
   final String name = 'decrypt';
 
   @override
-  final String description =
-      'Decrypt a file using a password or a keyfile.\n\n'
+  final String description = 'Decrypt a file using a password or a keyfile.\n\n'
       "e.g. decrypt using a password input. \n"
       "  chapose decrypt secret.data.cha -p \"Strong@Password#1\" \n\n"
       "e.g. decrypt using a keyfile. \n"
@@ -110,19 +109,17 @@ class DecryptCommand extends Command {
 
     final input = File(sourceRes);
     final output = File(outputRes);
-    fileDecrypt(deriveKey(keyRes), input, output)
-        .then((result) {
-          if (autoClean) {
-            try {
-              input.deleteSync();
-            } on FileSystemException catch (e) {
-              die('Error: ${e.osError?.message ?? e.message}"');
-            }
-          }
-        })
-        .catchError((error) {
-          die('Error: decryption failed: $error');
-        });
+    fileDecrypt(deriveKey(keyRes), input, output).then((result) {
+      if (autoClean) {
+        try {
+          input.deleteSync();
+        } on FileSystemException catch (e) {
+          die('Error: ${e.osError?.message ?? e.message}"');
+        }
+      }
+    }).catchError((error) {
+      die('Error: decryption failed: $error');
+    });
   }
 
   // cls_lastline

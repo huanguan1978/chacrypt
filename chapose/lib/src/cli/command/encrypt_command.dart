@@ -5,8 +5,7 @@ class EncryptCommand extends Command {
   final String name = 'encrypt';
 
   @override
-  final String description =
-      'Encrypt a file using a password or a keyfile.\n\n'
+  final String description = 'Encrypt a file using a password or a keyfile.\n\n'
       "e.g. encrypt using a password input. \n"
       "  chapose encrypt secret.data -p \"Strong@Password#1\" \n\n"
       "e.g. encrypt using a keyfile. \n"
@@ -112,19 +111,17 @@ class EncryptCommand extends Command {
     final input = File(sourceRes);
     final output = File(outputRes);
 
-    fileEncrypt(deriveKey(keyRes), input, output)
-        .then((result) {
-          if (autoClean) {
-            try {
-              input.deleteSync();
-            } on FileSystemException catch (e) {
-              die('Error: ${e.osError?.message ?? e.message}"');
-            }
-          }
-        })
-        .catchError((error) {
-          die('Error: encryption failed, $error');
-        });
+    fileEncrypt(deriveKey(keyRes), input, output).then((result) {
+      if (autoClean) {
+        try {
+          input.deleteSync();
+        } on FileSystemException catch (e) {
+          die('Error: ${e.osError?.message ?? e.message}"');
+        }
+      }
+    }).catchError((error) {
+      die('Error: encryption failed, $error');
+    });
   }
 
   // cls_lastline

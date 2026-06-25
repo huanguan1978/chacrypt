@@ -68,8 +68,7 @@ bool isChaFile(File file) {
 }
 
 /// global variable keyfile from environment
-final envKeyfile =
-    Platform.environment['CHAPOSE_KEYFILE'] ??
+final envKeyfile = Platform.environment['CHAPOSE_KEYFILE'] ??
     Platform.environment['chapose_keyfile'] ??
     '';
 
