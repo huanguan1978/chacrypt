@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Release tag (format: chapose-vX.Y.Z)
+        description: 'Release tag (format: chapose-vX.Y.Z)'
         required: true
         type: string
       build_run_id:
