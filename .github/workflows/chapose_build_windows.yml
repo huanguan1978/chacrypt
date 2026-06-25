@@ -1,0 +1,84 @@
+name: chapose build (windows)
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Git ref to build (branch, tag, or SHA)
+        required: true
+        default: main
+        type: string
+
+defaults:
+  run:
+    working-directory: chapose
+
+jobs:
+  get_version:
+    name: Get Project Version
+    runs-on: ubuntu-22.04
+    outputs:
+      app_version: ${{ steps.get_version.outputs.app_version }}
+      app_version_base: ${{ steps.get_version.outputs.app_version_base }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+      - name: Get Project Version
+        id: get_version
+        run: |
+          APP_VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //g' | tr -d '[:space:]')
+          APP_VERSION_BASE="${APP_VERSION%%+*}"
+          echo "app_version=$APP_VERSION" >> "$GITHUB_OUTPUT"
+          echo "app_version_base=$APP_VERSION_BASE" >> "$GITHUB_OUTPUT"
+
+  build_windows_x64:
+    name: Build Windows x64
+    runs-on: windows-2022
+    needs: get_version
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+      - run: dart pub get
+      - name: Compile executable
+        shell: powershell
+        run: |
+          $EXECUTABLE_NAME="chapose-${{ needs.get_version.outputs.app_version_base }}-windows-x64.exe"
+          New-Item -ItemType Directory -Path build -Force | Out-Null
+          dart compile exe "bin/chapose.dart" -o "build/$EXECUTABLE_NAME"
+      - name: Write build info
+        shell: powershell
+        run: |
+          @"
+          project=chapose
+          version=${{ needs.get_version.outputs.app_version_base }}
+          version_full=${{ needs.get_version.outputs.app_version }}
+          git_ref=${{ inputs.ref }}
+          git_sha=${{ github.sha }}
+          run_id=${{ github.run_id }}
+          run_attempt=${{ github.run_attempt }}
+          built_os=windows
+          built_arch=x64
+          "@ | Set-Content -Path build/BUILD_INFO.txt
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chapose-windows-x64-${{ needs.get_version.outputs.app_version_base }}
+          retention-days: 30
+          path: |
+            chapose/build/chapose-${{ needs.get_version.outputs.app_version_base }}-windows-x64.exe
+            chapose/build/BUILD_INFO.txt
+            chapose/LICENSE
+            chapose/*.md
+            chapose/doc/en/*.md
+            chapose/doc/zh/*.md
