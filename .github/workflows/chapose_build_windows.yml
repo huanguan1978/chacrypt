@@ -50,6 +50,10 @@ jobs:
         with:
           sdk: stable
       - run: dart pub get
+      - name: Generate version.g.dart
+        shell: powershell
+        run: |
+          "const String packageVersion = '${{ needs.get_version.outputs.app_version }}';" | Set-Content -Path lib/src/version.g.dart
       - name: Compile executable
         shell: powershell
         run: |

@@ -6,6 +6,12 @@ import 'package:chapose/chapose.dart';
 void main(List<String> args) {
   // ME.init(CliMessageProvider());
 
+  if (args.contains('--version')) {
+    final baseVersion = packageVersion.split('+').first;
+    print('chapose $baseVersion');
+    exit(0);
+  }
+
   final runner = ChaposeCommandRunner();
   runner.run(args).catchError((error) {
     if (error is UsageException) {
