@@ -19,9 +19,10 @@ set -e
 
 # Configuration
 APP_NAME="chapose"
-REPO="huanguan1978/chapose"
+REPO="huanguan1978/chacrypt"
 TAG_PREFIX="chapose-v"
 VERSION=""
+INSTALL_DIR_OVERRIDE=""
 
 usage() {
     echo "Usage: sh install.sh --version <version>"
@@ -38,6 +39,15 @@ while [ "$#" -gt 0 ]; do
                 exit 1
             fi
             VERSION="$1"
+            ;;
+        --install-dir)
+            shift
+            if [ -z "$1" ]; then
+                echo "Error: --install-dir requires a value."
+                usage
+                exit 1
+            fi
+            INSTALL_DIR_OVERRIDE="$1"
             ;;
         -h|--help)
             usage
@@ -61,6 +71,13 @@ fi
 TAG="${TAG_PREFIX}${VERSION}"
 RELEASE_PAGE="https://github.com/${REPO}/releases"
 
+for cmd in curl unzip find; do
+    if ! command -v "$cmd" >/dev/null 2>&1; then
+        echo "Error: Required command not found: $cmd"
+        exit 1
+    fi
+done
+
 # Detect OS and architecture
 UNAME_OS=$(uname -s)
 ARCH=$(uname -m)
@@ -74,7 +91,9 @@ case "$UNAME_OS" in
 esac
 
 # Set install directory based on OS
-if [ "$OS_NAME" = "windows" ]; then
+if [ -n "$INSTALL_DIR_OVERRIDE" ]; then
+    INSTALL_DIR="$INSTALL_DIR_OVERRIDE"
+elif [ "$OS_NAME" = "windows" ]; then
     INSTALL_DIR="$HOME/AppData/Local/bin"
 else
     INSTALL_DIR="$HOME/.local/bin"
@@ -113,49 +132,46 @@ echo ""
 mkdir -p "$INSTALL_DIR" || { echo "Error: Failed to create directory $INSTALL_DIR"; exit 1; }
 
 TMP_DIR=$(mktemp -d) || { echo "Error: Failed to create temporary directory"; exit 1; }
+cleanup() {
+    rm -rf "$TMP_DIR"
+}
+trap cleanup EXIT INT TERM
+
 cd "$TMP_DIR"
 
-if ! curl -LO "$URL" 2>/dev/null; then
+if ! curl -fL --retry 3 --connect-timeout 15 -o "$FILE_NAME" "$URL"; then
     echo "Error: Download failed. This may be due to:"
     echo "  - Network connectivity issues"
+    echo "  - Release asset not found at: $URL"
     echo "  - Incorrect platform/architecture detection"
     echo ""
     echo "Please download the binary manually from:"
     echo "$RELEASE_PAGE"
     echo ""
     echo "Then follow the manual installation steps in the script comments."
-    rm -rf "$TMP_DIR"
     exit 1
 fi
 
 # Extract and install
 if ! unzip -q -o "$FILE_NAME"; then
     echo "Error: Failed to extract the archive. Ensure unzip is installed."
-    rm -rf "$TMP_DIR"
     exit 1
 fi
 
-# Find the executable file (in build/ subdirectory)
+# Find the executable file inside any extracted build/ directory.
 EXECUTABLE=""
 
 # Try exact filename based on OS (Windows has .exe extension)
 if [ "$OS_NAME" = "windows" ]; then
-    if [ -f "build/${APP_NAME}-${VERSION}-${OS_NAME}-${ARCH_NAME}.exe" ]; then
-        EXECUTABLE="build/${APP_NAME}-${VERSION}-${OS_NAME}-${ARCH_NAME}.exe"
-    elif [ -f "build/${APP_NAME}.exe" ]; then
-        EXECUTABLE="build/${APP_NAME}.exe"
+    EXECUTABLE=$(find . \( -path "./build/${APP_NAME}-${VERSION}-${OS_NAME}-${ARCH_NAME}.exe" -o -path "./*/build/${APP_NAME}-${VERSION}-${OS_NAME}-${ARCH_NAME}.exe" -o -path "./build/${APP_NAME}.exe" -o -path "./*/build/${APP_NAME}.exe" \) -type f 2>/dev/null | head -1)
+    if [ -z "$EXECUTABLE" ]; then
+        EXECUTABLE=$(find . -path "*/build/${APP_NAME}*.exe" -type f 2>/dev/null | head -1)
     fi
 else
-    if [ -f "build/${APP_NAME}-${VERSION}-${OS_NAME}-${ARCH_NAME}" ]; then
-        EXECUTABLE="build/${APP_NAME}-${VERSION}-${OS_NAME}-${ARCH_NAME}"
-    elif [ -f "build/${APP_NAME}" ]; then
-        EXECUTABLE="build/${APP_NAME}"
+    EXECUTABLE=$(find . \( -path "./build/${APP_NAME}-${VERSION}-${OS_NAME}-${ARCH_NAME}" -o -path "./*/build/${APP_NAME}-${VERSION}-${OS_NAME}-${ARCH_NAME}" -o -path "./build/${APP_NAME}" -o -path "./*/build/${APP_NAME}" \) -type f 2>/dev/null | head -1)
+    if [ -z "$EXECUTABLE" ]; then
+        EXECUTABLE=$(find . -path "*/build/${APP_NAME}*" -type f 2>/dev/null | head -1)
     fi
-fi
-
-# Fallback: search for any executable matching app name
-if [ -z "$EXECUTABLE" ]; then
-    EXECUTABLE=$(find build -name "${APP_NAME}*" -type f -executable 2>/dev/null | head -1)
 fi
 
 if [ -z "$EXECUTABLE" ] || [ ! -f "$EXECUTABLE" ]; then
@@ -169,27 +185,33 @@ if [ -z "$EXECUTABLE" ] || [ ! -f "$EXECUTABLE" ]; then
     echo "3. Find the '${APP_NAME}' executable (in build/ subdirectory)"
     echo "4. Copy it to: $TARGET_BIN"
     echo "5. Make it executable: chmod +x $TARGET_BIN"
-    rm -rf "$TMP_DIR"
     exit 1
 fi
 
 if ! mv "$EXECUTABLE" "$TARGET_BIN"; then
     echo "Error: Failed to move ${APP_NAME} to $INSTALL_DIR"
     echo "You may need elevated permissions. Try: sudo mv $EXECUTABLE $TARGET_BIN"
-    rm -rf "$TMP_DIR"
     exit 1
 fi
 
 chmod +x "$TARGET_BIN" 2>/dev/null || true
-
-# Cleanup
-rm -rf "$TMP_DIR"
 
 # Verify installation
 if ! [ -x "$TARGET_BIN" ]; then
     echo "Error: Installation verification failed. ${APP_NAME} executable not found or not executable."
     exit 1
 fi
+
+VERIFY_OUTPUT=$("$TARGET_BIN" --version 2>&1) || {
+    echo "Error: Installation verification failed. ${APP_NAME} was downloaded, but it could not run on this system."
+    if [ -n "$VERIFY_OUTPUT" ]; then
+        echo "$VERIFY_OUTPUT"
+    fi
+    if [ "$OS_NAME" = "macos" ]; then
+        echo "Hint: This usually means the downloaded build requires a newer macOS version or a different CPU architecture."
+    fi
+    exit 1
+}
 
 # Prompt user to update PATH if needed
 echo "========================================"
@@ -217,6 +239,7 @@ fi
 
 echo "Verify installation:"
 echo "  ${APP_NAME} --version"
+echo "  ${VERIFY_OUTPUT}"
 echo ""
 echo "For help:"
 echo "  ${APP_NAME} --help"
