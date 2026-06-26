@@ -20,8 +20,8 @@ permissions:
   actions: read
 
 jobs:
-  validate:
-    name: Validate Tag And Version
+  release:
+    name: Draft GitHub Release
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -43,12 +43,6 @@ jobs:
             echo "Expected tag: chapose-v${APP_VERSION_BASE}"
             exit 1
           fi
-
-  release:
-    name: Draft GitHub Release
-    runs-on: ubuntu-22.04
-    needs: validate
-    steps:
       - name: Download build artifacts by run ID
         uses: actions/download-artifact@v4
         with:

@@ -20,12 +20,9 @@ defaults:
     working-directory: chapose
 
 jobs:
-  get_version:
-    name: Get Project Version
-    runs-on: ubuntu-22.04
-    outputs:
-      app_version: ${{ steps.get_version.outputs.app_version }}
-      app_version_base: ${{ steps.get_version.outputs.app_version_base }}
+  build_macos_x64:
+    name: Build macOS x64
+    runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v4
         with:
@@ -37,15 +34,6 @@ jobs:
           APP_VERSION_BASE="${APP_VERSION%%+*}"
           echo "app_version=$APP_VERSION" >> "$GITHUB_OUTPUT"
           echo "app_version_base=$APP_VERSION_BASE" >> "$GITHUB_OUTPUT"
-
-  build_macos_x64:
-    name: Build macOS x64
-    runs-on: macos-15-intel
-    needs: get_version
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: stable
@@ -53,19 +41,19 @@ jobs:
       - name: Generate version.g.dart
         run: |
           cat > lib/src/version.g.dart <<EOF
-          const String packageVersion = '${{ needs.get_version.outputs.app_version }}';
+          const String packageVersion = '${{ steps.get_version.outputs.app_version }}';
           EOF
       - name: Compile executable
         run: |
-          EXECUTABLE_NAME="chapose-${{ needs.get_version.outputs.app_version_base }}-macos-x64"
+          EXECUTABLE_NAME="chapose-${{ steps.get_version.outputs.app_version_base }}-macos-x64"
           mkdir -p build
           dart compile exe bin/chapose.dart -o build/$EXECUTABLE_NAME
       - name: Write build info
         run: |
           cat > build/BUILD_INFO.txt <<EOF
           project=chapose
-          version=${{ needs.get_version.outputs.app_version_base }}
-          version_full=${{ needs.get_version.outputs.app_version }}
+          version=${{ steps.get_version.outputs.app_version_base }}
+          version_full=${{ steps.get_version.outputs.app_version }}
           git_ref=${{ inputs.ref }}
           git_sha=${{ github.sha }}
           run_id=${{ github.run_id }}
@@ -76,10 +64,10 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: chapose-macos-x64-${{ needs.get_version.outputs.app_version_base }}
+          name: chapose-macos-x64-${{ steps.get_version.outputs.app_version_base }}
           retention-days: 30
           path: |
-            chapose/build/chapose-${{ needs.get_version.outputs.app_version_base }}-macos-x64
+            chapose/build/chapose-${{ steps.get_version.outputs.app_version_base }}-macos-x64
             chapose/build/BUILD_INFO.txt
             chapose/LICENSE
             chapose/*.md
@@ -89,11 +77,17 @@ jobs:
   build_macos_arm64:
     name: Build macOS arm64
     runs-on: macos-14
-    needs: get_version
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
+      - name: Get Project Version
+        id: get_version
+        run: |
+          APP_VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //g' | tr -d '[:space:]')
+          APP_VERSION_BASE="${APP_VERSION%%+*}"
+          echo "app_version=$APP_VERSION" >> "$GITHUB_OUTPUT"
+          echo "app_version_base=$APP_VERSION_BASE" >> "$GITHUB_OUTPUT"
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: stable
@@ -101,19 +95,19 @@ jobs:
       - name: Generate version.g.dart
         run: |
           cat > lib/src/version.g.dart <<EOF
-          const String packageVersion = '${{ needs.get_version.outputs.app_version }}';
+          const String packageVersion = '${{ steps.get_version.outputs.app_version }}';
           EOF
       - name: Compile executable
         run: |
-          EXECUTABLE_NAME="chapose-${{ needs.get_version.outputs.app_version_base }}-macos-arm64"
+          EXECUTABLE_NAME="chapose-${{ steps.get_version.outputs.app_version_base }}-macos-arm64"
           mkdir -p build
           dart compile exe bin/chapose.dart -o build/$EXECUTABLE_NAME
       - name: Write build info
         run: |
           cat > build/BUILD_INFO.txt <<EOF
           project=chapose
-          version=${{ needs.get_version.outputs.app_version_base }}
-          version_full=${{ needs.get_version.outputs.app_version }}
+          version=${{ steps.get_version.outputs.app_version_base }}
+          version_full=${{ steps.get_version.outputs.app_version }}
           git_ref=${{ inputs.ref }}
           git_sha=${{ github.sha }}
           run_id=${{ github.run_id }}
@@ -124,10 +118,10 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: chapose-macos-arm64-${{ needs.get_version.outputs.app_version_base }}
+          name: chapose-macos-arm64-${{ steps.get_version.outputs.app_version_base }}
           retention-days: 30
           path: |
-            chapose/build/chapose-${{ needs.get_version.outputs.app_version_base }}-macos-arm64
+            chapose/build/chapose-${{ steps.get_version.outputs.app_version_base }}-macos-arm64
             chapose/build/BUILD_INFO.txt
             chapose/LICENSE
             chapose/*.md

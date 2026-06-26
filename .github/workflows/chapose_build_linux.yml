@@ -20,12 +20,9 @@ defaults:
     working-directory: chapose
 
 jobs:
-  get_version:
-    name: Get Project Version
-    runs-on: ubuntu-22.04
-    outputs:
-      app_version: ${{ steps.get_version.outputs.app_version }}
-      app_version_base: ${{ steps.get_version.outputs.app_version_base }}
+  build_linux_multi_arch:
+    name: Build Linux multi-arch
+    runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
         with:
@@ -37,15 +34,6 @@ jobs:
           APP_VERSION_BASE="${APP_VERSION%%+*}"
           echo "app_version=$APP_VERSION" >> "$GITHUB_OUTPUT"
           echo "app_version_base=$APP_VERSION_BASE" >> "$GITHUB_OUTPUT"
-
-  build_linux_multi_arch:
-    name: Build Linux multi-arch
-    runs-on: macos-14
-    needs: get_version
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: stable
@@ -53,34 +41,34 @@ jobs:
       - name: Generate version.g.dart
         run: |
           cat > lib/src/version.g.dart <<EOF
-          const String packageVersion = '${{ needs.get_version.outputs.app_version }}';
+          const String packageVersion = '${{ steps.get_version.outputs.app_version }}';
           EOF
       - name: Compile Linux x64
         run: |
-          EXECUTABLE_NAME="chapose-${{ needs.get_version.outputs.app_version_base }}-linux-x64"
+          EXECUTABLE_NAME="chapose-${{ steps.get_version.outputs.app_version_base }}-linux-x64"
           mkdir -p build
           dart compile exe bin/chapose.dart -o build/$EXECUTABLE_NAME --target-os=linux --target-arch=x64
       - name: Compile Linux arm64
         run: |
-          EXECUTABLE_NAME="chapose-${{ needs.get_version.outputs.app_version_base }}-linux-arm64"
+          EXECUTABLE_NAME="chapose-${{ steps.get_version.outputs.app_version_base }}-linux-arm64"
           mkdir -p build
           dart compile exe bin/chapose.dart -o build/$EXECUTABLE_NAME --target-os=linux --target-arch=arm64
       - name: Compile Linux arm32
         run: |
-          EXECUTABLE_NAME="chapose-${{ needs.get_version.outputs.app_version_base }}-linux-arm"
+          EXECUTABLE_NAME="chapose-${{ steps.get_version.outputs.app_version_base }}-linux-arm"
           mkdir -p build
           dart compile exe bin/chapose.dart -o build/$EXECUTABLE_NAME --target-os=linux --target-arch=arm
       - name: Compile Linux riscv64
         run: |
-          EXECUTABLE_NAME="chapose-${{ needs.get_version.outputs.app_version_base }}-linux-riscv64"
+          EXECUTABLE_NAME="chapose-${{ steps.get_version.outputs.app_version_base }}-linux-riscv64"
           mkdir -p build
           dart compile exe bin/chapose.dart -o build/$EXECUTABLE_NAME --target-os=linux --target-arch=riscv64
       - name: Write build info
         run: |
           cat > build/BUILD_INFO.txt <<EOF
           project=chapose
-          version=${{ needs.get_version.outputs.app_version_base }}
-          version_full=${{ needs.get_version.outputs.app_version }}
+          version=${{ steps.get_version.outputs.app_version_base }}
+          version_full=${{ steps.get_version.outputs.app_version }}
           git_ref=${{ inputs.ref }}
           git_sha=${{ github.sha }}
           run_id=${{ github.run_id }}
@@ -91,10 +79,10 @@ jobs:
       - name: Upload Linux x64
         uses: actions/upload-artifact@v4
         with:
-          name: chapose-linux-x64-${{ needs.get_version.outputs.app_version_base }}
+          name: chapose-linux-x64-${{ steps.get_version.outputs.app_version_base }}
           retention-days: 30
           path: |
-            chapose/build/chapose-${{ needs.get_version.outputs.app_version_base }}-linux-x64
+            chapose/build/chapose-${{ steps.get_version.outputs.app_version_base }}-linux-x64
             chapose/build/BUILD_INFO.txt
             chapose/LICENSE
             chapose/*.md
@@ -103,10 +91,10 @@ jobs:
       - name: Upload Linux arm64
         uses: actions/upload-artifact@v4
         with:
-          name: chapose-linux-arm64-${{ needs.get_version.outputs.app_version_base }}
+          name: chapose-linux-arm64-${{ steps.get_version.outputs.app_version_base }}
           retention-days: 30
           path: |
-            chapose/build/chapose-${{ needs.get_version.outputs.app_version_base }}-linux-arm64
+            chapose/build/chapose-${{ steps.get_version.outputs.app_version_base }}-linux-arm64
             chapose/build/BUILD_INFO.txt
             chapose/LICENSE
             chapose/*.md
@@ -115,10 +103,10 @@ jobs:
       - name: Upload Linux arm32
         uses: actions/upload-artifact@v4
         with:
-          name: chapose-linux-arm32-${{ needs.get_version.outputs.app_version_base }}
+          name: chapose-linux-arm32-${{ steps.get_version.outputs.app_version_base }}
           retention-days: 30
           path: |
-            chapose/build/chapose-${{ needs.get_version.outputs.app_version_base }}-linux-arm
+            chapose/build/chapose-${{ steps.get_version.outputs.app_version_base }}-linux-arm
             chapose/build/BUILD_INFO.txt
             chapose/LICENSE
             chapose/*.md
@@ -127,10 +115,10 @@ jobs:
       - name: Upload Linux riscv64
         uses: actions/upload-artifact@v4
         with:
-          name: chapose-linux-riscv64-${{ needs.get_version.outputs.app_version_base }}
+          name: chapose-linux-riscv64-${{ steps.get_version.outputs.app_version_base }}
           retention-days: 30
           path: |
-            chapose/build/chapose-${{ needs.get_version.outputs.app_version_base }}-linux-riscv64
+            chapose/build/chapose-${{ steps.get_version.outputs.app_version_base }}-linux-riscv64
             chapose/build/BUILD_INFO.txt
             chapose/LICENSE
             chapose/*.md

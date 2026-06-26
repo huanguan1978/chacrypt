@@ -20,12 +20,9 @@ defaults:
     working-directory: chapose
 
 jobs:
-  get_version:
-    name: Get Project Version
-    runs-on: ubuntu-22.04
-    outputs:
-      app_version: ${{ steps.get_version.outputs.app_version }}
-      app_version_base: ${{ steps.get_version.outputs.app_version_base }}
+  build_windows_x64:
+    name: Build Windows x64
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
         with:
@@ -37,15 +34,6 @@ jobs:
           APP_VERSION_BASE="${APP_VERSION%%+*}"
           echo "app_version=$APP_VERSION" >> "$GITHUB_OUTPUT"
           echo "app_version_base=$APP_VERSION_BASE" >> "$GITHUB_OUTPUT"
-
-  build_windows_x64:
-    name: Build Windows x64
-    runs-on: windows-2022
-    needs: get_version
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref }}
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: stable
@@ -53,11 +41,11 @@ jobs:
       - name: Generate version.g.dart
         shell: powershell
         run: |
-          "const String packageVersion = '${{ needs.get_version.outputs.app_version }}';" | Set-Content -Path lib/src/version.g.dart
+          "const String packageVersion = '${{ steps.get_version.outputs.app_version }}';" | Set-Content -Path lib/src/version.g.dart
       - name: Compile executable
         shell: powershell
         run: |
-          $EXECUTABLE_NAME="chapose-${{ needs.get_version.outputs.app_version_base }}-windows-x64.exe"
+          $EXECUTABLE_NAME="chapose-${{ steps.get_version.outputs.app_version_base }}-windows-x64.exe"
           New-Item -ItemType Directory -Path build -Force | Out-Null
           dart compile exe "bin/chapose.dart" -o "build/$EXECUTABLE_NAME"
       - name: Write build info
@@ -65,8 +53,8 @@ jobs:
         run: |
           @"
           project=chapose
-          version=${{ needs.get_version.outputs.app_version_base }}
-          version_full=${{ needs.get_version.outputs.app_version }}
+          version=${{ steps.get_version.outputs.app_version_base }}
+          version_full=${{ steps.get_version.outputs.app_version }}
           git_ref=${{ inputs.ref }}
           git_sha=${{ github.sha }}
           run_id=${{ github.run_id }}
@@ -77,10 +65,10 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: chapose-windows-x64-${{ needs.get_version.outputs.app_version_base }}
+          name: chapose-windows-x64-${{ steps.get_version.outputs.app_version_base }}
           retention-days: 30
           path: |
-            chapose/build/chapose-${{ needs.get_version.outputs.app_version_base }}-windows-x64.exe
+            chapose/build/chapose-${{ steps.get_version.outputs.app_version_base }}-windows-x64.exe
             chapose/build/BUILD_INFO.txt
             chapose/LICENSE
             chapose/*.md
