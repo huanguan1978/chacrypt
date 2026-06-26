@@ -2,6 +2,22 @@
 
 **Chapose** 是一款基于 **ChaCha20-Poly1305** AEAD 算法的专业级命令行工具。作为 **ChaCrypt** 生态系统的核心组件，它专为高性能处理、自动化流转及强力安全加固而生。
 
+## 快速安装
+
+使用发布的二进制包并安装到本地默认路径：
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/huanguan1978/chacrypt/main/chapose/install.sh | sh -s -- --version 1.0.0
+```
+
+安装完成后，请执行：
+
+```sh
+chapose --version
+```
+
+如需查看二进制兼容性说明、源码编译安装方式与安装排错说明，请阅读完整文档 [./doc/zh/README.md](./doc/zh/README.md)。
+
 ---
 
 ## 📖 文档与指南

@@ -6,6 +6,48 @@
 
 ---
 
+## Installation
+
+### Binary Install
+Install the released binary to the default local path:
+```sh
+curl -fsSL https://raw.githubusercontent.com/huanguan1978/chacrypt/main/chapose/install.sh | sh -s -- --version 1.0.0
+```
+Default install path:
+*   macOS / Linux: `~/.local/bin/chapose`
+*   Windows (Git Bash / MSYS2): `~/AppData/Local/bin/chapose.exe`
+Verify the installation:
+```sh
+chapose --version
+```
+If the install directory is not already in your `PATH`, the script prints the exact command needed to add it.
+
+### Binary Compatibility Notes
+*   Release binaries are built in CI for specific operating system and CPU targets.
+*   A downloaded binary may still fail to run on older systems even when the OS and architecture names match.
+*   For example, some macOS binaries may require a newer macOS runtime than the one installed on your machine.
+
+### Build and Install from Source
+If the released binary cannot run on your device, build and install `chapose` from source instead.
+
+Example for macOS/Linux:
+
+```sh
+git clone https://github.com/huanguan1978/chacrypt.git
+cd chacrypt/chapose
+dart pub get
+dart compile exe bin/chapose.dart -o chapose
+mkdir -p "$HOME/.local/bin"
+cp ./chapose "$HOME/.local/bin/chapose"
+chmod 755 "$HOME/.local/bin/chapose"
+```
+Then verify it with:
+```sh
+chapose --version
+```
+
+---
+
 ## ✨ Core Features
 
 *   **Industrial-Grade AEAD Encryption**: Built on Authenticated Encryption with Associated Data (AEAD) mode, delivering exceptional performance while guaranteeing absolute confidentiality for data in transit and at rest.

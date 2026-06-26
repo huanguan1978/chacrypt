@@ -6,6 +6,48 @@
 
 ---
 
+## 安装说明
+
+### 二进制安装
+使用发布的二进制包并安装到本地默认路径：
+```sh
+curl -fsSL https://raw.githubusercontent.com/huanguan1978/chacrypt/main/chapose/install.sh | sh -s -- --version 1.0.0
+```
+默认安装路径：
+*   macOS / Linux: `~/.local/bin/chapose`
+*   Windows (Git Bash / MSYS2): `~/AppData/Local/bin/chapose.exe`
+安装完成后请验证：
+```sh
+chapose --version
+```
+如果安装目录尚未加入 `PATH`，脚本会输出对应的添加命令。
+
+### 二进制兼容性说明
+*   发布的二进制文件由 CI 针对特定操作系统与 CPU 目标构建。
+*   即使操作系统名称和架构名称匹配，下载后的二进制仍可能因系统版本过旧而无法运行。
+*   例如，某些 macOS 二进制可能要求比当前设备更高版本的 macOS 运行时。
+
+### 从源码编译并安装
+如果发布的二进制包无法在您的设备上运行，可以改为从源码构建并自行安装 `chapose`。
+
+以下示例适用于 macOS/Linux：
+
+```sh
+git clone https://github.com/huanguan1978/chacrypt.git
+cd chacrypt/chapose
+dart pub get
+dart compile exe bin/chapose.dart -o chapose
+mkdir -p "$HOME/.local/bin"
+cp ./chapose "$HOME/.local/bin/chapose"
+chmod 755 "$HOME/.local/bin/chapose"
+```
+随后执行：
+```sh
+chapose --version
+```
+
+---
+
 ## ✨ 核心特性
 
 *   **工业级加密标准**：基于 AEAD（带关联数据的认证加密）模式，在提供卓越加密性能的同时，确保数据在传输与存储中的绝对机密性。

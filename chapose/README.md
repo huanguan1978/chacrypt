@@ -2,6 +2,22 @@
 
 **Chapose** is a professional-grade command-line tool powered by the **ChaCha20-Poly1305** AEAD algorithm. Designed for high performance, automation, and robust security, it is the specialized CLI component of the **ChaCrypt** ecosystem.
 
+## Quick Install
+
+Install the released binary to the default local path:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/huanguan1978/chacrypt/main/chapose/install.sh | sh -s -- --version 1.0.0
+```
+
+Then verify it with:
+
+```sh
+chapose --version
+```
+
+For binary compatibility notes, source build installation, and troubleshooting, see the full installation guide in [./doc/en/README.md](./doc/en/README.md).
+
 ---
 
 ## 📖 Documentation & Guides
