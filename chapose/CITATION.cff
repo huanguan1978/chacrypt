@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Huang"
+    given-names: "Guan"
+title: "chapose - CLI Encryption Tool"
+version: 1.0.0
+url: "https://github.com/huanguan1978/chacrypt/tree/main/chapose"
+license: "GPL-3.0"
