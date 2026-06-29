@@ -1,0 +1,75 @@
+/*
+ * ChaBox - Offline Secure Vault
+ * Description: A high-performance file security workstation built on 
+ * the industry-grade ChaCha20-Poly1305 authenticated encryption standard.
+ * 
+ * Copyright (c) 2026 ChaBox Contributors
+ * Distributed under the PolyForm Noncommercial 1.0.0 license.
+ * https://github.com/huanguan1978/chacrypt
+ */
+
+import 'dart:async';
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
+import 'package:path/path.dart' as p;
+
+import '../../thirdparty/ft_textmime.dart';
+import '../../utils/file_helper.dart';
+import 'widget/markdown_image_builder.dart';
+
+class ImageCipherViewPage extends StatelessWidget {
+  const ImageCipherViewPage(this.mdfile, {super.key});
+  final File mdfile;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(p.basename(mdfile.path))),
+      body: FutureBuilder(
+        future: _loadfile(mdfile),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            return SingleChildScrollView(
+              child: MarkdownBody(
+                data: snapshot.data ?? '',
+                imageBuilder: markdownImageBuilder,
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Future<String> _loadfile(File file) async {
+    final (realName, _) = fileNameWithExts(file.path);
+    final isImageFile = isImageMimeType(realName);
+    if (!isImageFile) return 'only view image file.';
+    return '![$realName](${file.path})';
+
+    /*
+    if (fileExts.isEmpty) {
+      final memFile = MemoryFileSystem().file(
+        p.basenameWithoutExtension(file.path),
+      );
+      await fileDecrypt(
+        deriveKey(sl<Caching>().password.value),
+        file,
+        memFile,
+      ).catchError((error) {
+        memFile.writeAsStringSync("Decryption failed: $error");
+      });
+      return memFile.readAsString();
+    }
+    */
+    // return 'invalid view, ${file.path}.';
+  }
+
+  // cls.lastline
+}

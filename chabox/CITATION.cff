@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Huang"
+    given-names: "Guan"
+title: "ChaBox - Offline Secure Vault"
+version: 1.0.0
+date-released: 2026-06-04
+url: "https://github.com/huanguan1978/chacrypt"
+license: "PolyForm-Noncommercial-1.0.0"

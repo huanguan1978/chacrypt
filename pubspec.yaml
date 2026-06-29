@@ -6,7 +6,4 @@ environment:
 
 workspace:
   - chapose
-#   - chabox
-# dependencies:
-#   mime: ^2.0.0
-#   command_it: ^9.5.1
+  - chabox

@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the relevant project below."
+authors:
+  - family-names: "Huang"
+    given-names: "Guan"
+title: "ChaBox & chapose - Secure Vault Suite"
+url: "https://github.com/huanguan1978/chacrypt"
+references:
+  - type: software
+    title: "ChaBox - Offline Secure Vault"
+    version: 1.0.0
+    date-released: 2026-06-04
+    license: "PolyForm-Noncommercial-1.0.0"
+    url: "https://github.com/huanguan1978/chacrypt/tree/main/chabox"
+  - type: software
+    title: "chapose - CLI Encryption Tool"
+    version: 1.0.0
+    license: "GPL-3.0"
+    url: "https://github.com/huanguan1978/chacrypt/tree/main/chapose"
