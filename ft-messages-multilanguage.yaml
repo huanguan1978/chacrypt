@@ -1,0 +1,142 @@
+name: filetool config
+description: a filetool config template.
+version: 1.0.0
+
+# homepage: 
+# repository: https://github.com/huanguan1978/ft
+# author: 
+# authors: 
+
+# required, specifies the target platform (macos, linux, windows, android, ios)
+os: macos
+# required, readonly, ft cli version.
+ver: 1.0.7
+
+# YAML overrides CLI. Lookup: CLI named -> ENV -> YAML -> CLI positional.
+# source: .
+# size_ge:
+# size_le:
+# time_ge:
+# time_le:
+
+# pretty output fields
+fields: 
+  - ok
+  - action 
+  - type
+  # - mime
+  # - perm 
+  # - time
+  # - size
+  # - extra
+
+# exit on error
+errexit: true
+
+# * (Asterisk - Alias):  References a previously defined node (using `&` for anchor).  Used for data reusability. 
+# To include an asterisk literally within a string, enclose it in single or double quotes.
+# pattern: '**'
+
+excludes:
+  - '**~'
+  - '**.DS_Store'
+  # .** excluding hiddens
+  # - '.**'
+  - /**/.**
+
+# subcommand variable
+# list.type file|directory|link; archive.type tar|tgz
+list:
+  type: file
+mirror:
+  target: $ft_target_dir/mirror/$CURDATETIME
+  relative: true
+  tail: 1
+unarchive:
+  target: $ft_target_dir/unarchive/$CURDATETIME
+  relative: true
+  tail: 1  
+archive:
+  target: $ft_target_dir/archive/$CURDATE
+  relative: true
+  tail: 1
+  type: tgz
+
+shell:
+  vai_shell: true
+  exit_on_nonzore: false
+
+# define variables. 
+# the system provides dynamic variables CURDIR, CURDATE, CURDATETIME.
+# relative variable, prefix: AGODATE, AGODATETIME, format: prefix+ num+ unit.
+# NOW: 2025-08-29T09:02:26.441496;
+# CURDATE: 20250829; CURDATETIME: 20250829090226
+# AGODATE1DAY: 20250828; AGODATETIME1DAY: 20250828090226
+# AGODATE1WEEK: 20250822; AGODATETIME1WEEK: 20250822090226
+define:
+  # all macos desktop services store.
+  ds_store: '**.DS_Store'
+  # all hidden files
+  hidden_files: '.**'
+  # emacs|vi swap files  
+  swap_files: '**.sw[p|o|n]'
+  # emacs|nano backup files
+  backup_files: '**~' 
+  # vim undo files
+  vim_undo: '**.un'
+  # emacs autosave files
+  emacs_autosave: '**#'
+  
+  downloads: "~/Downloads"
+  ft_target_dir: "~/Documents/FileShows"
+
+
+# stream-based commands (supports [define] & ENV). requires - or -- options.
+commands:
+  - ft clean --source="$downloads" --pattern="$backup_files" --fields=ok,action,type 
+
+# custom blocks must end in 'commands'. 'commands' is the default.
+my_commands:
+  # - ft mirror ~/Desktop "$ft_target_dir/mirror/Desktop/$CURDATE/$CURDATETIME" --fields=ok,action,type 
+  # - ft rmdir --force --keeptop "$ft_target_dir/mirror/Desktop" --time_le="1 week ago" --fields=ok,action,type 
+
+# shell commands (supports [define] & ENV). 
+scripts:
+  - echo "hello world"
+
+# custom blocks must end in 'scripts'. 'scripts' is the default.
+gen_arb_scripts:
+  - dart run basic_message:gen_msg_resource -i chabox/lib/message/definition.dart -o chabox/lib/l10n/messages_resource.g.dart
+  - dart run intl_translation:extract_to_arb --output-dir=chabox/lib/l10n chabox/lib/l10n/messages_resource.g.dart
+  - mv chabox/lib/l10n/intl_messages.arb chabox/lib/l10n/intl_en.arb  
+
+# ft shell . --config=ft-messages-multilanguage.yaml --blocks=gen_from_arb_scripts
+gen_from_arb_scripts:
+  # - two arb: intl_en.arb, intl_zh.arb, intl_zh_HK.arb, intl_de.arb, intl_es.arb, intl_ja.arb, intl_pt.arb, intl_ru.arb
+  - dart run intl_translation:generate_from_arb --output-dir=chabox/lib/l10n/ chabox/lib/l10n/messages_resource.g.dart chabox/lib/l10n/intl_en.arb chabox/lib/l10n/intl_zh.arb chabox/lib/l10n/intl_zh_HK.arb chabox/lib/l10n/intl_de.arb chabox/lib/l10n/intl_es.arb chabox/lib/l10n/intl_ja.arb  chabox/lib/l10n/intl_pt.arb chabox/lib/l10n/intl_ru.arb
+
+# ft shell . --config=ft-messages-multilanguage.yaml --blocks=flutter_gen_scripts
+flutter_gen_scripts:
+  # fallback intl_en.arb
+  - cd chabox
+  - flutter gen-l10n
+  - dart run basic_message:gen_msg_registry
+  - cd ../..
+  - echo $PWD
+
+# a cron-like time-based job scheduler, run commands, and scripts.
+job:
+  # available actions: run | pause | stop | delete
+  action: stop
+  # tigger time: hourly | daily | weekly | yearly | expression
+  # tigger time: midday12t | midday13t | afternoon15t | afternoon16t | every1mins | every2mins | every3mins | every5mins
+  time: midday12t
+  # use expression time if not empty 
+  expression: 
+  # runonce: true | false
+  runonce: false
+  # result notification via email
+  emailnotify: false
+  # logpath use $ft_target_dir/joblogs if empty
+  logpath: 
+

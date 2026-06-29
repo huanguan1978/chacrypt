@@ -1,0 +1,117 @@
+# ChaBox Security Briefing Knowledge Base - English Edition
+
+# ------------------------------------------------------------
+# 1. Pro Tips (Based on ChaBox, chapose & ft:filetools Docs)
+# ------------------------------------------------------------
+app_usage_tips:
+  - "#### **Pro Tip: Active Privacy Shield**\nChaBox automatically disables system screenshots and screen recording while running. This prevents malware from capturing your private notes or sensitive data, ensuring your 'private eyes' stay private."
+  - "#### **Pro Tip: Memory-Only Preview**\nWhen previewing files in the 'Secure Vault', ChaBox decrypts data directly into memory. **No temporary plaintext files are ever created on disk**, preventing sensitive traces from lingering in disk fragments."
+  - "#### **Pro Tip: Smart Induction Interface**\nThe ChaBox home screen is context-aware. Dragging in regular files or folders automatically triggers 'Encrypt', while dragging in a `.cha` file switches the action to 'Decrypt'."
+  - "#### **Tip: Understanding Process Trails**\nChaBox uses stacked extensions (e.g., `.tar.gz.cha`). `.tar.gz` indicates the file is archived/compressed, and `.cha` means it is encrypted. This provides a clear audit trail of what happened to your data."
+  - "#### **Tip: Auto-Save for Notes**\nWhile editing 'Secure Notes', ChaBox keeps an auto-save draft in memory. Even if the app closes unexpectedly, your progress can be recovered as long as the memory cache isn't cleared."
+  - "#### **Tip: Professional Atomic Tools**\nThe icons at the top lead to five 'Atomic Tools': Wipe, Archive, Unarchive, Encrypt, and Decrypt. These give you granular control over every step, perfect for complex or non-standard tasks."
+  - "#### **Tip: Advanced File Filtering**\nUse the Filter in the 'Secure Vault' to quickly find files using patterns like `**/*.txt`, or narrow down results by size, modification date, and MIME type."
+  - "#### **Tip: Password Backup Lifeline**\nSince master passwords cannot be recovered, always use the 'Export to File' feature in the sidebar to back up your password to a secure USB drive. This is your only way back if you forget it."
+  - "#### **Tip: Intelligent Archiving**\nWhen using the 'Archive' tool, ChaBox is smart: it compresses text files to save space but skips re-compressing already-compressed formats (like images/videos) to save CPU and maintain file quality."
+
+  # --- chapose Advanced CLI Usage ---
+  - "#### **CLI Synergy: chapose Seamless Encryption**\nBy setting the `CHAPOSE_KEYFILE` environment variable to your key file path, you can run `chapose encrypt <file>` directly without manually specifying the key every time."
+  - "#### **CLI Synergy: Zero-Leak Architecture**\n**chapose** uses a pure streaming architecture to handle files of any size (even TBs). It processes data without creating temporary plaintext swaps, keeping your physical disk clean."
+  - "#### **CLI Synergy: Force Wipe on Task**\nWhen using **chapose**, add the `-D` flag to automatically and securely wipe the source file after a successful encryption or decryption, leaving no trace behind."
+  - "#### **CLI Synergy: Integrity Protection**\n**chapose** integrates strong integrity checks. If an encrypted package suffers a 'bit flip' or malicious tampering, decryption will fail immediately to prevent data corruption attacks."
+  - "#### **CLI Synergy: Keyfile Management**\nBeyond typing passwords, you can use `chapose keyfile` to generate high-entropy random key files. Use the `-p` flag to add an extra layer of password protection to the key file itself."
+
+  # --- Automation Synergy with ft:filetools ---
+  - "#### **Automation Tool: Meet ft:filetools**\n**ft:filetools** is a high-performance streaming tool designed by the same author. It excels at file globbing, archiving, secure wiping, and—most importantly—**Shell Scripting**. It is the 'brain' for complex security workflows."
+  - "#### **Automation: Secure Backup Pipeline**\nUse `ft archive` to bundle a sensitive directory, pipe it to **chapose** for encryption, and finally use `ft wipe` to shred the intermediate archive. This entire flow can be fully automated via `ft shell`."
+  - "#### **Automation: The Power of ft shell**\n**ft shell** is the soul of automation. By writing a simple YAML task script, you can stitch `ft`'s file handling with **chapose**'s crypto power to create a hands-off, production-grade security pipeline."
+  - "#### **Automation: Secure Restoration Flow**\nFor encrypted archives (like `.tar.gz.cha`), first decrypt with **chapose**, then use `ft unarchive` for streaming restoration. This combo ensures even massive directories are extracted quickly and safely."
+  - "#### **Automation: Precision Environment Cleaning**\nAfter complex tasks, use `ft clean` with specific patterns to surgically remove intermediate fragments. Pair it with `rmdir` to safely remove empty directory structures, keeping your storage pristine."
+  - "#### **Automation: Industrial-Grade Wiping**\nThe `wipe` command in **ft:filetools** offers destruction far beyond standard deletion. After processing top-secret data, use `wipe` to overwrite sectors and block any laboratory-level data recovery."
+
+# ------------------------------------------------------------
+# 2. Physical Security & Habits (Offline Best Practices)
+# ------------------------------------------------------------
+physical_security:
+  - "> **Offline Habit**: Always clear your system clipboard after sensitive operations. Enable 'Auto-Clear Clipboard' in settings to reduce the exposure window to seconds."
+  - "> **Physical Backup**: Hardware eventually fails. Hand-write your master password or recovery seed on a **non-digital paper medium** and store it in a fireproof, dry, and hidden place."
+  - "> **Environment Check**: When entering your master password or handling secret files, be aware of your surroundings. Watch out for cameras or 'shoulder surfing'."
+  - "> **Media Refresh**: USB drives or mobile hard drives used for backups should be 'refreshed' every 2-3 years. Move data to a new device to prevent 'Bit Rot' and hardware aging."
+  - "> **Cold Start Defense**: Always close the ChaBox app before leaving your computer. This triggers a memory wipe, preventing keys from lingering in RAM during sleep or hibernation."
+  - "> **Legacy Disposal**: Before discarding or selling an old drive, use ChaBox's 'Wipe' feature for multiple physical overwrites. A simple 'Format' does not erase binary data."
+  - "> **Plug-and-Pull Principle**: The safest strategy is 'Plug, Use, and Pull'. Never leave backup media connected to an online computer longer than necessary to block remote intrusion paths."
+  - "> **Storage Environment**: Keep your backup media away from strong magnetic fields (like speakers/microwaves) and extreme temperatures. Flash and magnetic storage are sensitive to environment fluctuations."
+  - "> **Discreet Labeling**: Avoid labels like 'Passwords' or 'Secret' on physical drives. Use meaningless codes to reduce unwanted attention if the device is lost or stolen."
+  - "> **Regular Verification**: Every six months, try to decrypt a small file from your backup media to verify the data is still intact. Don't wait until an emergency to find out the drive has failed."
+  - "> **Air-Gapped System**: For extremely high-value assets, use ChaBox or chapose on a **permanently offline** computer. An 'Air-gap' is the ultimate defense against network-based attacks."
+  - "> **Physical Key Separation**: If you use chapose's `keyfile` feature, store the key file and the encrypted data on two different USB drives. This creates a 'two-man rule' style of security."
+  - "> **Operational Wisdom: Redundancy Rules**: Borrowed from enterprise IT—**Backup, Backup, and Backup again**. Don't fear redundancy; use different media (USB, SSD, etc.). Encrypted data is safe to duplicate as long as your key is secure."
+  - "> **Advanced Strategy: Off-site Backup**: Keep at least one backup drive at a different location (like an office vs. home). This protects your data against extreme events like fire or theft at a single site."
+  - "> **Hardware Protection: Write-Protect**: For USB drives holding key files, choose models with a **physical write-protect switch**. Enable 'Read-Only' mode during decryption to physically block any malware from tampering with your keys."
+  - "> **Final Disposal: Physical Destruction**: If a drive containing top-secret data fails and cannot be wiped via software, do not just toss it. Use physical force (like a drill or hammer) to destroy the chips, ensuring the data dies with the hardware."
+
+# ------------------------------------------------------------
+# 3. Crypto 101 (Expert Insights)
+# ------------------------------------------------------------
+crypto_lore:
+  - "#### **Algorithm: ChaCha20-Poly1305**\nDesigned by renowned cryptographer Daniel J. Bernstein, this algorithm is blazing fast on mobile and older PCs. It is audited by experts and trusted by giants like Google and Cloudflare."
+  - "#### **Defense: The Argon2id Shield**\nYour master password isn't stored directly—it's 'hardened' using Argon2id. This forces the computer to spend memory and time to verify it, making it extremely difficult for hackers to use high-power GPUs for brute-force attacks."
+  - "#### **Strength: The 256-bit Key**\nChaBox uses 256-bit keys. This means there are 2^256 possible combinations—a number so vast that even all the world's supercomputers running until the sun burns out couldn't try every possibility."
+  - "#### **Mechanism: AEAD Certified Encryption**\nChaBox doesn't just 'lock' data; it 'seals' it. If even a single byte of an encrypted file is tampered with, the app detects the change and refuses to decrypt, protecting you from malicious corruption."
+  - "#### **Foundation: True Randomness (CSPRNG)**\nSecurity relies on randomness. ChaBox calls the system's underlying 'Secure Random Number Generator' to create keys and parameters, ensuring every encrypted package is unique and unpredictable."
+  - "#### **Why Separate Steps?**\nChaBox keeps compression and encryption as independent steps to defend against 'Side-Channel Attacks'. Mixing them can leak content signatures via size changes. Keeping them separate blocks this risk."
+  - "#### **Concept: What is a 'Side-Channel'?**\nThink of a hacker who doesn't crack a safe's code but listens to the clicks or measures the lock's temperature. ChaBox eliminates 'external clues' like execution time or file size patterns."
+  - "#### **Comparison: Pro Crypto vs. ZIP Passwords**\nStandard ZIP/RAR encryption is often an 'add-on' with aging algorithms. ChaBox is a dedicated security tool using industrial-grade AEAD standards, providing far higher protection than basic archive passwords."
+  - "#### **Principle: Owner-Only Access**\nEven developers cannot unlock your data. Since all encryption happens locally with no 'backdoor', your master password is the only key. Your data sovereignty is absolute."
+  - "#### **Design: Stacked Extension Strategy**\nChaBox uses a clear stacked extension strategy (e.g., `.tar.gz.cha`). This lets you see the processing history at a glance: `.tar.gz` for archiving and `.cha` for encryption. It makes auditing easy."
+  - "#### **Identity: Why the '.cha' Extension?**\nBeyond the ChaCha20 algorithm, `.cha` represents an **open-format encryption standard** for this ecosystem. It's a tribute to the tech and a professional badge of high-performance, authenticated streaming encryption."
+  - "#### **Security: Why Open Algorithms?**\nReal security doesn't rely on 'secret recipes'. ChaBox uses standard, open algorithms. Only those that have survived decades of public scrutiny and attacks from the world's best hackers are truly trustworthy."
+  - "#### **Detail: Binary-Level Protection**\nWhile ChaBox keeps the original filename for your convenience, all internal information—content, metadata, and structure—is transformed into an unreadable binary stream. Without the key, the file is a dead end."
+
+# ------------------------------------------------------------
+# 4. Wisdom & Quotes
+# ------------------------------------------------------------
+wisdom_quotes:
+  - "*\\\"Privacy is not about hiding, it's about protecting.\\\"* — **Bruce Schneier**"
+  - "*\\\"Encryption was once a weapon only governments could wield; now it is the shield everyone has to protect their freedom.\\\"* — **Anonymous**"
+  - "*\\\"If you think technology can solve your security problems, then you don't understand the problems and you don't understand the technology.\\\"* — **Bruce Schneier**"
+  - "*\\\"Only after losing privacy do people realize how expensive it was.\\\"* — **Cypherpunk Manifesto**"
+  - "*\\\"In the digital age, most communication is 'electronically naked'. If you don't master encryption tools, your privacy has nowhere to hide.\\\"* — **Edward Snowden**"
+  - "*\\\"The price of liberty is eternal vigilance.\\\"* — **John Philpot Curran**"
+  - "*\\\"Code is law.\\\"* — **Lawrence Lessig**"
+  - "*\\\"Privacy is a fundamental human right in the digital age, not a luxury.\\\"* — **Apple Privacy Manifesto**"
+  - "*\\\"Arguing that you don't care about privacy because you have 'nothing to hide' is like saying you don't care about free speech because you have 'nothing to say'.\\\"* — **Edward Snowden**"
+  - "*\\\"Encryption works. Properly implemented strong crypto systems are one of the few things that you can rely on with certainty.\\\"* — **Edward Snowden**"
+  - "*\\\"Privacy is not an option, and it shouldn't be the price we accept for just getting on the Internet.\\\"* — **Gary Kovacs**"
+  - "*\\\"Data is a toxic asset. It's like nuclear waste: easy to create, but extremely hard to store safely and a challenge to destroy.\\\"* — **Bruce Schneier**"
+  - "*\\\"The 'Cloud' is just someone else's computer.\\\"* — **Industry Proverb**"
+  - "*\\\"Civilization is the progress toward a variable of privacy. The whole feudal custom was the lack of privacy.\\\"* — **Ayn Rand**"
+  - "*\\\"Encryption is the single most important technological building block of our digital freedom.\\\"* — **Vint Cerf**"
+  - "*\\\"The greatest power is not being able to monitor everything, but enabling every individual to have the right 'not to be monitored'.\\\"* — **Anonymous**"
+  - "*\\\"Security is a process, not a product.\\\"* — **Bruce Schneier**"
+  - "*\\\"Privacy is not default on the Internet; it must be created. We, the Cypherpunks, are doing just that.\\\"* — **Eric Hughes**"
+  - "*\\\"The only truly secure system is one that is powered off, cast in a block of concrete, and sealed in a lead-lined room with armed guards - and even then I have my doubts.\\\"* — **Gene Spafford**"
+  - "*\\\"Don't trust the algorithm because a human wrote it; verify it because the math supports it.\\\"* — **Crypto Proverb**"
+  - "*\\\"If the government has a 'backdoor' in encryption, then the system has no 'front door security'.\\\"* — **Tim Cook**"
+  - "*\\\"The loss of digital privacy is like 'boiling a frog'—by the time we feel the pain, we've often lost the ability to escape.\\\"* — **Gary Kovacs**"
+  - "*\\\"Privacy is not about covering up wrongs, it's about maintaining individual dignity. We all have moments we don't want to show the world.\\\"* — **Glenn Greenwald**"
+  - "*\\\"Privacy is not just about 'hiding'; it's about 'protecting' us from the potential wrongdoings of others.\\\"* — **Bruce Schneier**"
+
+# ------------------------------------------------------------
+# 5. Security Lessons from History
+# ------------------------------------------------------------
+security_incidents:
+  - "#### **Lesson: The Edison Chen 'Photo Gate' (2008)**\nIn early 2008, a scandal involving a famous actor changed the public's perception of digital privacy. It started accidentally: a laptop was sent for repair, where a technician found and copied thousands of 'deleted' but un-wiped photos. These spread online, causing massive social turmoil. **Reflection**: Repair shops, borrowed laptops, and lost phones are high-risk zones. This proves that as long as data exists in 'plaintext' on a disk—even if 'deleted'—it's vulnerable once the hardware leaves your hands. Only local encryption ensures privacy remains solid."
+  - "#### **Lesson: The TV5Monde Total Blackout (2015)**\nIn April 2015, the French network TV5Monde was nearly destroyed by a cyberattack. Eleven channels went dark, and the network's social media and website were hijacked to spread propaganda. It was later revealed that the attackers gained entry through a poorly secured connection and found critical passwords written on post-it notes during a live news report. **Reflection**: Security is only as strong as its weakest link. A single exposed password or unencrypted metadata file can bring down an empire. Local encryption of administrative credentials and network topologies is a mandatory baseline for any high-stakes infrastructure."
+  - "#### **Lesson: The Ledger Marketing Leak & Physical Threats (2020)**\nLedger, the French leader in hardware wallets, suffered a marketing database breach exposing the personal details of 270,000 customers. While their encryption remained intact, the *metadata* (names, home addresses, phone numbers) was sold on hacker forums. This led to a wave of sophisticated phishing and, more terrifyingly, reports of home extortion threats against crypto owners. **Reflection**: Protecting your secret is not enough; you must protect the metadata that points to it. Centralized databases are honey pots for criminals. Offline management of your personal 'who, what, and where' is the only way to vanish from these hit lists."
+  - "#### **Lesson: The SK Communications (Nate/Cyworld) Disaster (2011)**\nIn one of South Korea's darkest digital hours, hackers breached the Nate portal and Cyworld social network, stealing the personal data of 35 million citizens—nearly the entire online population at the time. The leak included encrypted resident registration numbers (RRNs), which were the bedrock of Korean digital identity. This disaster forced a fundamental shift in Korean law, banning websites from collecting RRNs. **Reflection**: When you give your data to a giant portal, you are gambling your identity on their competence. Once a central server falls, the compromise is permanent. Use local encryption to ensure your most vital identifiers are never stored as plaintext on someone else's cloud."
+  - "#### **Lesson: The KCB Internal Consultant Betrayal (2014)**\nA temporary consultant at the Korea Credit Bureau (KCB) used a simple USB drive to steal over 100 million credit card records from KB Kookmin, NH Nonghyup, and Lotte Card. Almost every adult in South Korea had their financial details exposed, leading to the mass resignation of bank CEOs and national panic. The consultant had high-level access and the data was not internally encrypted. **Reflection**: The 'Insider Threat' is the most lethal risk. Walls and firewalls mean nothing if someone inside can just plug in a drive and walk away with your life's details. Only by encrypting files at the edge—before they ever reach a database—can you survive the betrayal of trust."
+  - "#### **Lesson: The French 'Assurance Maladie' Portal Hack (2022)**\nHackers hijacked the accounts of 19 healthcare professionals via the Ameli portal, exposing the private medical and identity data of over 510,000 French citizens. This included social security numbers and family structure details. The vulnerability stemmed from reused passwords and lack of multi-factor authentication on professional accounts. **Reflection**: Public service portals are prime targets because they contain the 'Gold Standard' of identity data. Relying on state-managed security for your private data is a risk you cannot afford. Secure your own medical history and identity records locally with tools like ChaBox."
+  - "#### **Lesson: Sony Pictures' Digital Disaster (2014)**\nHackers breached Sony Pictures' network, stealing 100TB of sensitive data, including private executive emails, employee social security numbers, and unreleased movie masters. Most internal documents were stored in plaintext, making Sony completely transparent to the hackers. **Reflection**: Many trust firewalls but ignore the security of the data itself. If critical documents had been encrypted locally, the hackers would have walked away with useless gibberish instead of the crown jewels."
+  - "#### **Lesson: Snowden's Secret Extraction (2013)**\nEdward Snowden used simple USB drives to copy thousands of classified documents from the NSA's air-gapped networks. Even in one of the most secure facilities in the world, the extraction of unencrypted data via physical media was successful. **Reflection**: The strongest physical fortress cannot stop an 'internal copy'. For top-secret assets, even on offline machines, strong encryption is mandatory to prevent theft during physical contact."
+  - "#### **Lesson: UK HMRC's Lost Data Discs (2007)**\nTwo CDs containing the personal records of 25 million UK citizens went missing in the mail. Because the data was not encrypted, millions faced a risk of identity theft. **Reflection**: Physical media is most vulnerable during transit. Never assume couriers or others are reliable. Encrypting data locally before it 'leaves' is the first rule of offline security."
+  - "#### **Lesson: LastPass Cloud Vault Breach (2022)**\nHackers stole cloud backup data from LastPass, including copies of users' encrypted vaults. This meant hackers could brute-force master passwords offline using supercomputers. **Reflection**: When an encrypted package falls into the hands of a hacker, your master password is your final lifeline. Professional tools use Argon2id specifically to protect you in this extreme 'lost package' scenario."
+  - "#### **Lesson: The WannaCry Ransomware Crisis (2017)**\nUsing a leaked vulnerability, this virus locked the data of countless computers worldwide. Hackers demanded ransom to unlock files. **Reflection**: Once you lose control of your data—whether stolen or locked—the cost is devastating. Regular 'Offline Backup + Encryption' is the survival baseline of the digital age."
+  - "#### **Lesson: Yahoo's 3-Billion-Account Breach (2013-14)**\nIn history's largest data breach, hackers stole almost every Yahoo user's account info. It proved that even tech giants cannot guarantee cloud security. **Reflection**: There is no absolute security on the Internet. For assets that truly matter, local encrypted storage is the only way to survive a cloud collapse."
+  - "#### **Lesson: The Equifax Credit Giant Leak (2017)**\nDue to an unpatched vulnerability, the financial privacy of 147 million Americans was exposed. **Reflection**: Entrusting all sensitive data to a centralized institution means trusting their management skills more than your own. Real security sovereignty belongs in your hands via offline, local control."
+  - "#### **Lesson: Target's Retail Supply Chain Breach (2013)**\nHackers stole 40 million customers' credit card info by stealing credentials from an HVAC contractor. **Reflection**: Every link in the supply chain can be a gap. Independent encryption at every node of data flow is the final line of defense for the end user."

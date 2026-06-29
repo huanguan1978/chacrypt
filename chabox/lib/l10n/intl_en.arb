@@ -1,0 +1,584 @@
+{
+  "@@locale": "en",
+  "@@last_modified": "2026-06-13T15:22:21.816676",
+  "st_home_drawer_setting_cleanupLabel": "{cleanup, select, keep{Keep} delete{Delete} wipelow{Erase(fill zeros)} wipemedium{Erase(fill bits)} wipehigh{Erase(fill rnds)} other{Other}}",
+  "@st_home_drawer_setting_cleanupLabel": {
+    "description": "Setting cleanup (keep | delete | wipelow | wipemedium | wipehigh ) to (Keep | Delete | WipeLow | WipeMedium | WipeHigh).",
+    "type": "text",
+    "placeholders": {
+      "cleanup": {
+        "example": "keep"
+      }
+    }
+  },
+  "st_home_drawer_setting_cleanupParam": "{param, select, level{Erase Level} iter{Iterations} other{Other}}",
+  "@st_home_drawer_setting_cleanupParam": {
+    "description": "Setting cleanup param (level | iter) to (EraseLevel | Iterations).",
+    "type": "text",
+    "placeholders": {
+      "param": {
+        "example": "level"
+      }
+    }
+  },
+  "st_home_drawer_setting_themeLabel": "{theme, select, system{Auto} light{Light} dark{Dark} other{Other}}",
+  "@st_home_drawer_setting_themeLabel": {
+    "description": "Setting theme (system | light | dark) to (Auto | Light | Dark).",
+    "type": "text",
+    "placeholders": {
+      "theme": {
+        "example": "system"
+      }
+    }
+  },
+  "st_home_drawer_setting_langLabel": "{lang, select, en{English} zh{Simplified Chinese} hk{Traditional Chinese} de{German} ja{Japanese} ru{Russian} es{Spanish} pt{Portuguese} fr{French} ko{Korean} other{Other}}",
+  "@st_home_drawer_setting_langLabel": {
+    "description": "Setting lang (en | zh | hk | de | ja | ru | es | pt) to (English | Simplified Chinese | Traditional Chinese | German | Japanese | Russian | Spanish | Portuguese).",
+    "type": "text",
+    "placeholders": {
+      "lang": {
+        "example": "en"
+      }
+    }
+  },
+  "st_home_drawer_setting_applockLabel": "{applock, select, none{None} passphrase{Passphrase} biometrics{Biometrics} other{Other}}",
+  "@st_home_drawer_setting_applockLabel": {
+    "description": "Setting applock (none | passphrase | biometrics) to (None | Passphrase | Biometrics).",
+    "type": "text",
+    "placeholders": {
+      "applock": {
+        "example": "none"
+      }
+    }
+  },
+  "st_home_drawer_setting_autolockLabel": "{autolock, select, m1{After 1 min} m5{After 5 min} m15{After 15 min} other{Other}}",
+  "@st_home_drawer_setting_autolockLabel": {
+    "description": "Setting autolock (m1 | m5 | m15) to (After 1 | 5 | 15 min).",
+    "type": "text",
+    "placeholders": {
+      "autolock": {
+        "example": "m5"
+      }
+    }
+  },
+  "st_home_drawer_setting_autoccLabel": "{autocc, select, s00{Disabled} s10{After 10 secs} s30{After 30 secs} s60{After 60 secs} other{Other}}",
+  "@st_home_drawer_setting_autoccLabel": {
+    "description": "Setting autocc (s00 | s10 | s30 | s60) to (Disabled | After 10 | 30 | 60 secs).",
+    "type": "text",
+    "placeholders": {
+      "autocc": {
+        "example": "s30"
+      }
+    }
+  },
+  "st_home_drawer_setting_autosaveLabel": "{autosave, select, s00{Disabled} s05{After 5 secs} s10{After 10 secs} s20{After 20 secs} s30{After 30 secs} other{Other}}",
+  "@st_home_drawer_setting_autosaveLabel": {
+    "description": "Setting autosave (s00 | s05 | s10 | s20 | s30) to (Disabled | After 5 | 10 | 20 | 30 secs).",
+    "type": "text",
+    "placeholders": {
+      "autosave": {
+        "example": "s30"
+      }
+    }
+  },
+  "st_home_drawer_setting_title": "{title, select, theme{ThemeMode} lang{Language} secret{Secret} applock{AppLock} autolock{Auto-Lock} autoclear{Clipboard-Clear} autosave{Notes Auto Save} cleanup{CleanUp} overwrite{Overwrite existing files} stats{Show vault stats} mime{Custom MIME Types} other{Other}}",
+  "cd_setting_mime": "{status, select, success{Loaded mime.types successfully.} empty{Failed to load mime.types: data is empty.} nottext{Failed to load mime.types: required text file.} other{Other}} {tooltip}",
+  "@cd_setting_mime": {
+    "description": "Consolidated feedback for mime load with tooltip parameter.",
+    "type": "text",
+    "placeholders": {
+      "status": {
+        "example": "success"
+      },
+      "tooltip": {
+        "example": "Load a mime.types file to extend MIME detection for filtering, icon classification, and packaging/auto-compress logic."
+      }
+    }
+  },
+  "st_setting_mime_tooltip": "Load a mime.types file to extend MIME detection for filtering, icon classification, and packaging/auto-compress logic.",
+  "@st_setting_mime_tooltip": {
+    "description": "Tooltip for the custom MIME types setting.",
+    "type": "text"
+  },
+  "@st_home_drawer_setting_title": {
+    "description": "Setting titles in drawer.",
+    "type": "text",
+    "placeholders": {
+      "title": {
+        "example": "theme"
+      }
+    }
+  },
+  "st_home_drawer_directory_title": "{title, select, notes{Notes To Directory} encrypt{Encrypted To Directory} decrypt{Decrypted To Directory} archive{Archived To Directory} unarchive{UnArchived To Directory} other{Other}}",
+  "@st_home_drawer_directory_title": {
+    "description": "Directory titles in drawer.",
+    "type": "text",
+    "placeholders": {
+      "title": {
+        "example": "theme"
+      }
+    }
+  },
+  "st_common_global_nav_actionLabel": "{action, select, notes{Secure Notes} vault{Secure Vault} shredding{Secure Erase} encrypt{Encrypt} decrypt{Decrypt} archive{Archive} unarchive{UnArchive} about{About} other{Other}}",
+  "@st_common_global_nav_actionLabel": {
+    "description": "Navigation action labels.",
+    "type": "text",
+    "placeholders": {
+      "action": {
+        "example": "about"
+      }
+    }
+  },
+  "st_common_global_popup_actionLabel": "{action, select, copy{Copy} copyto{Copy To...} moveto{Move To...} copypath{Copy Path} rename{Rename...} touch{Modify Date} view{View} edit{Edit} delete{Delete} erase{Erase} save{Save} saveto{Save To...} reset{Reset} clear{Clear} refresh{Refresh} pickenv{From Environment} regen{Regenerate} pickfile{Pick File} pickfolder{Pick Folder} openfile{Open File} openfolder{Open Folder} home{Home} eula{EULA} about{About} help{Help} quit{Quit} share{Share} other{Other}}",
+  "@st_common_global_popup_actionLabel": {
+    "description": "Popup menu action labels.",
+    "type": "text",
+    "placeholders": {
+      "action": {
+        "example": "view"
+      }
+    }
+  },
+  "st_common_global_button_actionLabel": "{action, select, close{Close} cancel{Cancel} confirm{Confirm} reset{Reset} new_{New} save{Save} view{View} variables{Variables} accept{Agree} copyall{Copy All} pickfiles{Pick Files} sharefiles{Share Files} other{Other}}",
+  "@st_common_global_button_actionLabel": {
+    "description": "Standard button action labels.",
+    "type": "text",
+    "placeholders": {
+      "action": {
+        "example": "view"
+      }
+    }
+  },
+  "st_home_index_header_defaultTitle": "Home",
+  "@st_home_index_header_defaultTitle": {
+    "description": "Default home page header title.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "st_home_index_counter_incrementLabel": "You have pushed the button this many times:",
+  "@st_home_index_counter_incrementLabel": {
+    "description": "Counter label for testing.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "st_home_index_counter_incrementAction": "Increment",
+  "@st_home_index_counter_incrementAction": {
+    "description": "Counter action button for testing.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "st_action_autocrypt_button_label": "{action, select, waiting{Waiting for File | Folder ...} processing{Processing...} encrypt{Encrypt File} decrypt{Decrypt File} other{Other}}",
+  "@st_action_autocrypt_button_label": {
+    "description": "Autocrypt action button labels.",
+    "type": "text",
+    "placeholders": {
+      "action": {
+        "example": "waiting"
+      }
+    }
+  },
+  "st_common_global_info_independent": "Note: Each item in the list is processed independently.",
+  "@st_common_global_info_independent": {
+    "description": "Common note for independent processing.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "st_common_global_info_noGlobal": "Note: Current setting changes apply only to this operation and will not be saved globally.",
+  "@st_common_global_info_noGlobal": {
+    "description": "Common note for session-only settings.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "st_archive_global_info_compression": "Note: Text files are compressed to .gz, while directories are packed and compressed to .tgz.",
+  "@st_archive_global_info_compression": {
+    "description": "Archive compression info.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "st_archive_global_info_independent": "Note: Each item in the list is processed independently and not merged into a single archive.",
+  "@st_archive_global_info_independent": {
+    "description": "Archive independent processing info.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "st_decrypt_global_info_atomic": "Atomic Decryption: This tool only decrypts files. If the result is a .tgz or .gz package, please use the \"Unarchive\" tool to extract it.",
+  "@st_decrypt_global_info_atomic": {
+    "description": "Decrypt atomic operation info.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "st_encrypt_global_info_atomic": "Atomic Encryption: Only files are supported. To encrypt a directory, please use the \"Archive\" tool first to create a .tgz package.",
+  "@st_encrypt_global_info_atomic": {
+    "description": "Encrypt atomic operation info.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "st_unarchive_global_info_support": "Note: Supports extraction of .gz (single files) and .tar, .tgz (directory packages).",
+  "@st_unarchive_global_info_support": {
+    "description": "Unarchive support info.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "st_home_briefing_label": "{label, select, header{💡 Daily Briefing} helpHeader{🌐 Help & Support} doc{📖 Documentation} sponsor{☕ Sponsor} status{Vault Status} other{Other}}",
+  "@st_home_briefing_label": {
+    "description": "Static text labels for BriefingView.",
+    "type": "text",
+    "placeholders": {
+      "label": {
+        "example": "header"
+      }
+    }
+  },
+  "st_multi_file_only_empty_hint": "Drag & drop files here",
+  "@st_multi_file_only_empty_hint": {
+    "description": "Hint text for multi file input.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "st_single_path_empty_hint": "Drag & drop file/folder, or select from menu",
+  "@st_single_path_empty_hint": {
+    "description": "Hint text for single path input.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "st_multi_path_empty_hint": "Drag & drop files/folders here",
+  "@st_multi_path_empty_hint": {
+    "description": "Hint text when MultiPath list is empty.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "st_multi_path_manage_title": "Manage Paths",
+  "@st_multi_path_manage_title": {
+    "description": "Title for path management dialog.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "st_multi_path_paste_hint": "Paste paths here (newline/comma separated)",
+  "@st_multi_path_paste_hint": {
+    "description": "Hint text for path pasting.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "st_common_dialog_unsaved_title": "Unsaved Changes",
+  "@st_common_dialog_unsaved_title": {
+    "description": "Common dialog title for unsaved changes.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cd_common_dialog_unsaved_body": "You have unsaved content. Do you want to discard it and leave?",
+  "@cd_common_dialog_unsaved_body": {
+    "description": "Common dialog message for unsaved changes.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "st_edit_text_hint": "Start writing...",
+  "@st_edit_text_hint": {
+    "description": "Hint text for the text editor.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "st_multi_path_add_tooltip": "Add Paths",
+  "@st_multi_path_add_tooltip": {
+    "description": "Tooltip for adding paths.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "st_multi_path_add_from_input_tooltip": "Add paths from input",
+  "@st_multi_path_add_from_input_tooltip": {
+    "description": "Tooltip for adding paths from the text input field.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "st_multi_path_remove_tooltip": "Remove this path",
+  "@st_multi_path_remove_tooltip": {
+    "description": "Tooltip for removing a single path from the list.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "st_common_form_field_label": "{field, select, dir{Monitored Directory} pattern{Glob Pattern} mime{Mimetype Part} minSize{Min Size (bytes)} maxSize{Max Size (bytes)} startDate{Start Date} endDate{End Date} sortBy{Sort By} sortOrder{Order} other{Other}}",
+  "@st_common_form_field_label": {
+    "description": "Common labels for form fields.",
+    "type": "text",
+    "placeholders": {
+      "field": {
+        "example": "dir"
+      }
+    }
+  },
+  "st_common_variables_body_label": "{label, select, appVarsTitle{Read-only app variables} appVarsDesc{These variables reflect the current app directory settings. Paths use POSIX separators (/). Tap the copy icon to insert the placeholder into your template.} custVarsTitle{Custom variables} custVarsDesc{Variable names must start with a letter or underscore (e.g. myVar). Path values must use POSIX separators (e.g. /home/user/docs).} other{Other}}",
+  "@st_common_variables_body_label": {
+    "description": "Template variables.",
+    "type": "text",
+    "placeholders": {
+      "label": {
+        "example": "appVarsTitle"
+      }
+    }
+  },
+  "rs_common_global_action_copied": "Copied to clipboard",
+  "@rs_common_global_action_copied": {
+    "description": "Success feedback for copy operation.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cd_common_action_edit_notTextFile": "Only edit text file.",
+  "@cd_common_action_edit_notTextFile": {
+    "description": "Validation error: attempted to edit a non-text file.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cd_common_action_view_notViewable": "Only view (text | image) file.",
+  "@cd_common_action_view_notViewable": {
+    "description": "Validation error: attempted to view a non-viewable file.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "rs_common_action_move_success": "Moved!",
+  "@rs_common_action_move_success": {
+    "description": "Success feedback for move operation.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "rs_common_action_file_error": "Error: {err}",
+  "@rs_common_action_file_error": {
+    "description": "Error feedback for file operations.",
+    "type": "text",
+    "placeholders": {
+      "err": {
+        "example": "unknown error"
+      }
+    }
+  },
+  "cd_common_action_rename_exists": "File already exists. Delete it first.",
+  "@cd_common_action_rename_exists": {
+    "description": "Validation error: rename operation collision.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "st_common_dialog_title": "{action, select, rename{Rename} delete{Delete File} erase{Secure Erase File} touch{Modify Date} unsaved{Unsaved Changes} applock{Enable App Lock} filter{Filter Files} other{Other}}",
+  "@st_common_dialog_title": {
+    "description": "Common dialog titles.",
+    "type": "text",
+    "placeholders": {
+      "action": {
+        "example": "rename"
+      }
+    }
+  },
+  "cd_common_dialog_confirm_message": "{action, select, delete{Are you sure you want to delete this file?} erase{Are you sure you want to secure erase this file?} unsaved{You have unsaved content. Do you want to discard it and leave?} applock{Please confirm you have safely stored your passphrase or backup. If you enable app lock without credentials, you may be locked out and unable to access the app.} other{Other}}",
+  "@cd_common_dialog_confirm_message": {
+    "description": "Common dialog confirmation messages.",
+    "type": "text",
+    "placeholders": {
+      "action": {
+        "example": "delete"
+      }
+    }
+  },
+  "cd_vault_action_security_check_failed": "Security check failed.",
+  "@cd_vault_action_security_check_failed": {
+    "description": "Validation error: vault security check failed.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "rs_edit_action_auto_save_failed": "Auto-save failed: {error}",
+  "@rs_edit_action_auto_save_failed": {
+    "description": "Error feedback for auto-save operation failure.",
+    "type": "text",
+    "placeholders": {
+      "error": {
+        "example": "unknown error"
+      }
+    }
+  },
+  "rs_edit_action_journal_saved": "Journal Saved!",
+  "@rs_edit_action_journal_saved": {
+    "description": "Success feedback for journal save operation.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "rs_key_action_success": "{action, select, regenerate{success, regenerate secret.} save{success, save secret.} saveto{success, saveto, {path}.} load{success, load from file.} loadenv{success, load from environment, {path}.} other{Other}}",
+  "@rs_key_action_success": {
+    "description": "Success feedback for key operations.",
+    "type": "text",
+    "placeholders": {
+      "action": {
+        "example": "save"
+      },
+      "path": {
+        "example": "path"
+      }
+    }
+  },
+  "rs_edit_action_file_write_failed": "file write failed: {error}",
+  "@rs_edit_action_file_write_failed": {
+    "description": "Error feedback for file write operation failure.",
+    "type": "text",
+    "placeholders": {
+      "error": {
+        "example": "unknown error"
+      }
+    }
+  },
+  "cd_key_action_file_invalid": "{error}",
+  "@cd_key_action_file_invalid": {
+    "description": "Validation error for file operations.",
+    "type": "text",
+    "placeholders": {
+      "error": {
+        "example": "invalid file"
+      }
+    }
+  },
+  "st_common_dialog_confirm_label": "{action, select, rename{RENAME} delete{DELETE} erase{ERASE} other{Other}}",
+  "@st_common_dialog_confirm_label": {
+    "description": "Common dialog confirmation button labels.",
+    "type": "text",
+    "placeholders": {
+      "action": {
+        "example": "rename"
+      }
+    }
+  },
+  "rs_clipher_action_decryption_failed": "Decryption failed: {error}",
+  "@rs_clipher_action_decryption_failed": {
+    "description": "Error feedback for decryption operation failure.",
+    "type": "text",
+    "placeholders": {
+      "error": {
+        "example": "unknown error"
+      }
+    }
+  },
+  "rs_clipher_action_encryption_failed": "Encryption failed: {error}",
+  "@rs_clipher_action_encryption_failed": {
+    "description": "Error feedback for encryption operation failure.",
+    "type": "text",
+    "placeholders": {
+      "error": {
+        "example": "unknown error"
+      }
+    }
+  },
+  "rs_autocrypt_action_command_result": "{text}",
+  "@rs_autocrypt_action_command_result": {
+    "description": "Unified output for autocrypt command results (success/error).",
+    "type": "text",
+    "placeholders": {
+      "text": {
+        "example": "result"
+      }
+    }
+  },
+  "cd_autocrypt_action_no_input": "no input file selected",
+  "@cd_autocrypt_action_no_input": {
+    "description": "Validation error: no input selected for autocrypt.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "common_auth_dialog_passwordTooShort_error": "Password is too short (must be at least {length} characters).",
+  "@common_auth_dialog_passwordTooShort_error": {
+    "type": "text",
+    "placeholders": {
+      "length": {
+        "example": "8"
+      }
+    }
+  },
+  "common_auth_dialog_passwordInSecure_error": "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
+  "@common_auth_dialog_passwordInSecure_error": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "common_auth_dialog_passwordRequired_error": "Must specify either a password or a keyfile.",
+  "@common_auth_dialog_passwordRequired_error": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "common_auth_dialog_fileNameIsSamed_error": "file cannot be the same as the file: {file}",
+  "@common_auth_dialog_fileNameIsSamed_error": {
+    "type": "text",
+    "placeholders": {
+      "file": {
+        "example": "myfile"
+      }
+    }
+  },
+  "common_auth_dialog_fileNameIsEmpty_error": "file name is empty.",
+  "@common_auth_dialog_fileNameIsEmpty_error": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "common_auth_dialog_fileIsExist_error": "file already exist: {file} .",
+  "@common_auth_dialog_fileIsExist_error": {
+    "type": "text",
+    "placeholders": {
+      "file": {
+        "example": "myfile"
+      }
+    }
+  },
+  "common_auth_dialog_fileIsNotExist_error": "file is not exist: {file} .",
+  "@common_auth_dialog_fileIsNotExist_error": {
+    "type": "text",
+    "placeholders": {
+      "file": {
+        "example": "myfile"
+      }
+    }
+  },
+  "common_auth_dialog_fileIsNotReadable_error": "file is not readable: {file} .",
+  "@common_auth_dialog_fileIsNotReadable_error": {
+    "type": "text",
+    "placeholders": {
+      "file": {
+        "example": "myfile"
+      }
+    }
+  },
+  "common_auth_dialog_fileIsNotWritable_error": "file is not writable: {file} .",
+  "@common_auth_dialog_fileIsNotWritable_error": {
+    "type": "text",
+    "placeholders": {
+      "file": {
+        "example": "myfile"
+      }
+    }
+  },
+  "common_auth_dialog_PathIsNotWritable_error": "file path is not writable: {file} .",
+  "@common_auth_dialog_PathIsNotWritable_error": {
+    "type": "text",
+    "placeholders": {
+      "file": {
+        "example": "myfile"
+      }
+    }
+  },
+  "common_auth_dialog_fileIsEmpty_error": "file is empty: {file} .",
+  "@common_auth_dialog_fileIsEmpty_error": {
+    "type": "text",
+    "placeholders": {
+      "file": {
+        "example": "myfile"
+      }
+    }
+  },
+  "common_auth_dialog_fileIsEncrypted_error": "file is already encrypted: {file} .",
+  "@common_auth_dialog_fileIsEncrypted_error": {
+    "type": "text",
+    "placeholders": {
+      "file": {
+        "example": "myfile"
+      }
+    }
+  },
+  "common_auth_dialog_fileIsDecrypted_error": "file type is not an decrypted file: {file} .",
+  "@common_auth_dialog_fileIsDecrypted_error": {
+    "type": "text",
+    "placeholders": {
+      "file": {
+        "example": "myfile"
+      }
+    }
+  }
+}
