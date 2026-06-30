@@ -1,0 +1,181 @@
+name: chabox build (linux)
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+permissions:
+  contents: read
+  actions: read
+
+on:
+  workflow_dispatch:
+    inputs:
+      prepare_run_id:
+        description: Run ID of chabox prepare workflow
+        required: true
+        type: string
+
+defaults:
+  run:
+    working-directory: chabox
+
+jobs:
+  get_prepare_meta:
+    name: Read Prepared Source Metadata
+    runs-on: ubuntu-22.04
+    outputs:
+      app_version: ${{ steps.get_version.outputs.app_version }}
+      app_version_base: ${{ steps.get_version.outputs.app_version_base }}
+      git_ref: ${{ steps.get_version.outputs.git_ref }}
+      git_sha: ${{ steps.get_version.outputs.git_sha }}
+      prepare_timestamp_utc: ${{ steps.get_version.outputs.prepare_timestamp_utc }}
+      prepare_run_id_meta: ${{ steps.get_version.outputs.prepare_run_id_meta }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ inputs.prepare_run_id }}
+          name: chabox-prepared-source
+          path: dist
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Read version and prepare metadata
+        id: get_version
+        run: |
+          APP_VERSION=$(grep '^version:' dist/chabox/pubspec.yaml | sed 's/version: //g' | tr -d '[:space:]')
+          APP_VERSION_BASE="${APP_VERSION%%+*}"
+          source dist/chabox/.prepare/PREPARE_INFO.env
+          echo "app_version=$APP_VERSION" >> "$GITHUB_OUTPUT"
+          echo "app_version_base=$APP_VERSION_BASE" >> "$GITHUB_OUTPUT"
+          echo "git_ref=$PREPARE_GIT_REF" >> "$GITHUB_OUTPUT"
+          echo "git_sha=$PREPARE_GIT_SHA" >> "$GITHUB_OUTPUT"
+          echo "prepare_timestamp_utc=$PREPARE_TIMESTAMP_UTC" >> "$GITHUB_OUTPUT"
+          echo "prepare_run_id_meta=$PREPARE_RUN_ID" >> "$GITHUB_OUTPUT"
+          echo "Prepare metadata:"
+          echo "  input_prepare_run_id=${{ inputs.prepare_run_id }}"
+          echo "  prepare_run_id_meta=$PREPARE_RUN_ID"
+          echo "  prepare_timestamp_utc=$PREPARE_TIMESTAMP_UTC"
+          echo "  git_ref=$PREPARE_GIT_REF"
+          echo "  git_sha=$PREPARE_GIT_SHA"
+
+  build_linux_x64:
+    name: Build Linux x64
+    runs-on: ubuntu-22.04
+    needs: get_prepare_meta
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ inputs.prepare_run_id }}
+          name: chabox-prepared-source
+          path: .
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Print build input summary
+        run: |
+          echo "Build target: linux/x64"
+          echo "prepare_run_id(input)=${{ inputs.prepare_run_id }}"
+          echo "prepare_run_id(meta)=${{ needs.get_prepare_meta.outputs.prepare_run_id_meta }}"
+          echo "prepare_timestamp_utc=${{ needs.get_prepare_meta.outputs.prepare_timestamp_utc }}"
+          echo "git_ref=${{ needs.get_prepare_meta.outputs.git_ref }}"
+          echo "git_sha=${{ needs.get_prepare_meta.outputs.git_sha }}"
+          echo "expected_artifact=chabox-build-linux-x64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: latest
+          channel: stable
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libx11-dev pkg-config cmake ninja-build libblkid-dev
+      - run: flutter pub get
+      - run: flutter build linux --release --obfuscate --split-debug-info=build/split-debug-info/linux/x64
+      - name: Assemble build ZIP
+        run: |
+          ARTIFACT_NAME="chabox-build-linux-x64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
+          (cd build/linux/x64/release && zip -r "../../../$ARTIFACT_NAME" bundle)
+      - name: Assemble debug ZIP
+        run: |
+          DEBUG_ARTIFACT_NAME="chabox-debug-linux-x64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
+          (cd build/split-debug-info/linux && zip -r "../../../$DEBUG_ARTIFACT_NAME" x64)
+      - name: Verify build ZIP structure
+        run: |
+          ARTIFACT_PATH="build/chabox-build-linux-x64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
+          test -f "$ARTIFACT_PATH"
+          unzip -l "$ARTIFACT_PATH" > build/zip-list-linux-x64.txt
+          grep -q 'bundle/' build/zip-list-linux-x64.txt
+      - name: Verify debug ZIP structure
+        run: |
+          DEBUG_ARTIFACT_PATH="build/chabox-debug-linux-x64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
+          test -f "$DEBUG_ARTIFACT_PATH"
+          unzip -l "$DEBUG_ARTIFACT_PATH" > build/zip-list-linux-x64-debug.txt
+          grep -q 'x64/' build/zip-list-linux-x64-debug.txt
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chabox-build-linux-x64-${{ needs.get_prepare_meta.outputs.app_version_base }}
+          retention-days: 30
+          path: chabox/build/chabox-build-linux-x64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip
+      - name: Upload debug artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chabox-debug-linux-x64-${{ needs.get_prepare_meta.outputs.app_version_base }}
+          retention-days: 30
+          path: chabox/build/chabox-debug-linux-x64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip
+
+  build_linux_arm64:
+    name: Build Linux arm64
+    runs-on: ubuntu-24.04-arm
+    needs: get_prepare_meta
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ inputs.prepare_run_id }}
+          name: chabox-prepared-source
+          path: .
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Print build input summary
+        run: |
+          echo "Build target: linux/arm64"
+          echo "prepare_run_id(input)=${{ inputs.prepare_run_id }}"
+          echo "prepare_run_id(meta)=${{ needs.get_prepare_meta.outputs.prepare_run_id_meta }}"
+          echo "prepare_timestamp_utc=${{ needs.get_prepare_meta.outputs.prepare_timestamp_utc }}"
+          echo "git_ref=${{ needs.get_prepare_meta.outputs.git_ref }}"
+          echo "git_sha=${{ needs.get_prepare_meta.outputs.git_sha }}"
+          echo "expected_artifact=chabox-build-linux-arm64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: latest
+          channel: stable
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libx11-dev pkg-config cmake ninja-build libblkid-dev
+      - run: flutter pub get
+      - run: flutter build linux --release --target-platform=linux-arm64 --obfuscate --split-debug-info=build/split-debug-info/linux/arm64
+      - name: Assemble build ZIP
+        run: |
+          ARTIFACT_NAME="chabox-build-linux-arm64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
+          (cd build/linux/arm64/release && zip -r "../../../$ARTIFACT_NAME" bundle)
+      - name: Assemble debug ZIP
+        run: |
+          DEBUG_ARTIFACT_NAME="chabox-debug-linux-arm64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
+          (cd build/split-debug-info/linux && zip -r "../../../$DEBUG_ARTIFACT_NAME" arm64)
+      - name: Verify build ZIP structure
+        run: |
+          ARTIFACT_PATH="build/chabox-build-linux-arm64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
+          test -f "$ARTIFACT_PATH"
+          unzip -l "$ARTIFACT_PATH" > build/zip-list-linux-arm64.txt
+          grep -q 'bundle/' build/zip-list-linux-arm64.txt
+      - name: Verify debug ZIP structure
+        run: |
+          DEBUG_ARTIFACT_PATH="build/chabox-debug-linux-arm64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
+          test -f "$DEBUG_ARTIFACT_PATH"
+          unzip -l "$DEBUG_ARTIFACT_PATH" > build/zip-list-linux-arm64-debug.txt
+          grep -q 'arm64/' build/zip-list-linux-arm64-debug.txt
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chabox-build-linux-arm64-${{ needs.get_prepare_meta.outputs.app_version_base }}
+          retention-days: 30
+          path: chabox/build/chabox-build-linux-arm64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip
+      - name: Upload debug artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chabox-debug-linux-arm64-${{ needs.get_prepare_meta.outputs.app_version_base }}
+          retention-days: 30
+          path: chabox/build/chabox-debug-linux-arm64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip
