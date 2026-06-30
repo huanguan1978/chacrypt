@@ -1,0 +1,15 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+
+Name=ChaBox
+Comment=Offline Secure Vault
+Categories=System;Security;Cryptography;
+
+Icon=com.iche2.chabox
+Exec=chabox %U
+Terminal=false
+MimeType=application/x-chabox-encrypted;inode/directory;
+
+StartupNotify=true
+StartupWMClass=ChaBox
