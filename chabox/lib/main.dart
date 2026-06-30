@@ -81,7 +81,10 @@ void main(List<String> args) {
     if (rawPath.isNotEmpty &&
         (File(rawPath).existsSync() || Directory(rawPath).existsSync())) {
       GetIt.instance.unregister<String>(instanceName: 'sourcePath');
-      GetIt.instance.registerSingleton<String>(rawPath, instanceName: 'sourcePath');
+      GetIt.instance.registerSingleton<String>(
+        rawPath,
+        instanceName: 'sourcePath',
+      );
     }
   }
 

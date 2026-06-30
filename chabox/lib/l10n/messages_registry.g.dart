@@ -1,80 +1,187 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import './app_localizations.dart';
 
-String resolveL10n(AppLocalizations l10n, String key, Map<String, dynamic>? args) {
+String resolveL10n(
+  AppLocalizations l10n,
+  String key,
+  Map<String, dynamic>? args,
+) {
   switch (key) {
-    case 'st_home_drawer_setting_cleanupLabel': return l10n.st_home_drawer_setting_cleanupLabel((args?['cleanup'] as String));
-    case 'st_home_drawer_setting_cleanupParam': return l10n.st_home_drawer_setting_cleanupParam((args?['param'] as String));
-    case 'st_home_drawer_setting_themeLabel': return l10n.st_home_drawer_setting_themeLabel((args?['theme'] as String));
-    case 'st_home_drawer_setting_langLabel': return l10n.st_home_drawer_setting_langLabel((args?['lang'] as String));
-    case 'st_home_drawer_setting_applockLabel': return l10n.st_home_drawer_setting_applockLabel((args?['applock'] as String));
-    case 'st_home_drawer_setting_autolockLabel': return l10n.st_home_drawer_setting_autolockLabel((args?['autolock'] as String));
-    case 'st_home_drawer_setting_autoccLabel': return l10n.st_home_drawer_setting_autoccLabel((args?['autocc'] as String));
-    case 'st_home_drawer_setting_autosaveLabel': return l10n.st_home_drawer_setting_autosaveLabel((args?['autosave'] as String));
-    case 'st_home_drawer_setting_title': return l10n.st_home_drawer_setting_title((args?['title'] as String));
-    case 'cd_setting_mime': return l10n.cd_setting_mime((args?['status'] as String), args?['tooltip'] ?? '');
-    case 'st_setting_mime_tooltip': return l10n.st_setting_mime_tooltip;
-    case 'st_home_drawer_directory_title': return l10n.st_home_drawer_directory_title((args?['title'] as String));
-    case 'st_common_global_nav_actionLabel': return l10n.st_common_global_nav_actionLabel((args?['action'] as String));
-    case 'st_common_global_popup_actionLabel': return l10n.st_common_global_popup_actionLabel((args?['action'] as String));
-    case 'st_common_global_button_actionLabel': return l10n.st_common_global_button_actionLabel((args?['action'] as String));
-    case 'st_home_index_header_defaultTitle': return l10n.st_home_index_header_defaultTitle;
-    case 'st_home_index_counter_incrementLabel': return l10n.st_home_index_counter_incrementLabel;
-    case 'st_home_index_counter_incrementAction': return l10n.st_home_index_counter_incrementAction;
-    case 'st_action_autocrypt_button_label': return l10n.st_action_autocrypt_button_label((args?['action'] as String));
-    case 'st_common_global_info_independent': return l10n.st_common_global_info_independent;
-    case 'st_common_global_info_noGlobal': return l10n.st_common_global_info_noGlobal;
-    case 'st_archive_global_info_compression': return l10n.st_archive_global_info_compression;
-    case 'st_archive_global_info_independent': return l10n.st_archive_global_info_independent;
-    case 'st_decrypt_global_info_atomic': return l10n.st_decrypt_global_info_atomic;
-    case 'st_encrypt_global_info_atomic': return l10n.st_encrypt_global_info_atomic;
-    case 'st_unarchive_global_info_support': return l10n.st_unarchive_global_info_support;
-    case 'st_home_briefing_label': return l10n.st_home_briefing_label((args?['label'] as String));
-    case 'st_multi_file_only_empty_hint': return l10n.st_multi_file_only_empty_hint;
-    case 'st_single_path_empty_hint': return l10n.st_single_path_empty_hint;
-    case 'st_multi_path_empty_hint': return l10n.st_multi_path_empty_hint;
-    case 'st_multi_path_manage_title': return l10n.st_multi_path_manage_title;
-    case 'st_multi_path_paste_hint': return l10n.st_multi_path_paste_hint;
-    case 'st_common_dialog_unsaved_title': return l10n.st_common_dialog_unsaved_title;
-    case 'cd_common_dialog_unsaved_body': return l10n.cd_common_dialog_unsaved_body;
-    case 'st_edit_text_hint': return l10n.st_edit_text_hint;
-    case 'st_multi_path_add_tooltip': return l10n.st_multi_path_add_tooltip;
-    case 'st_multi_path_add_from_input_tooltip': return l10n.st_multi_path_add_from_input_tooltip;
-    case 'st_multi_path_remove_tooltip': return l10n.st_multi_path_remove_tooltip;
-    case 'st_common_form_field_label': return l10n.st_common_form_field_label((args?['field'] as String));
-    case 'st_common_variables_body_label': return l10n.st_common_variables_body_label((args?['label'] as String));
-    case 'rs_common_global_action_copied': return l10n.rs_common_global_action_copied;
-    case 'cd_common_action_edit_notTextFile': return l10n.cd_common_action_edit_notTextFile;
-    case 'cd_common_action_view_notViewable': return l10n.cd_common_action_view_notViewable;
-    case 'rs_common_action_move_success': return l10n.rs_common_action_move_success;
-    case 'rs_common_action_file_error': return l10n.rs_common_action_file_error(args?['err'] ?? '');
-    case 'cd_common_action_rename_exists': return l10n.cd_common_action_rename_exists;
-    case 'st_common_dialog_title': return l10n.st_common_dialog_title((args?['action'] as String));
-    case 'cd_common_dialog_confirm_message': return l10n.cd_common_dialog_confirm_message((args?['action'] as String));
-    case 'cd_vault_action_security_check_failed': return l10n.cd_vault_action_security_check_failed;
-    case 'rs_edit_action_auto_save_failed': return l10n.rs_edit_action_auto_save_failed(args?['error'] ?? '');
-    case 'rs_edit_action_journal_saved': return l10n.rs_edit_action_journal_saved;
-    case 'rs_key_action_success': return l10n.rs_key_action_success((args?['action'] as String), args?['path'] ?? '');
-    case 'rs_edit_action_file_write_failed': return l10n.rs_edit_action_file_write_failed(args?['error'] ?? '');
-    case 'cd_key_action_file_invalid': return l10n.cd_key_action_file_invalid(args?['error'] ?? '');
-    case 'st_common_dialog_confirm_label': return l10n.st_common_dialog_confirm_label((args?['action'] as String));
-    case 'rs_clipher_action_decryption_failed': return l10n.rs_clipher_action_decryption_failed(args?['error'] ?? '');
-    case 'rs_clipher_action_encryption_failed': return l10n.rs_clipher_action_encryption_failed(args?['error'] ?? '');
-    case 'rs_autocrypt_action_command_result': return l10n.rs_autocrypt_action_command_result(args?['text'] ?? '');
-    case 'cd_autocrypt_action_no_input': return l10n.cd_autocrypt_action_no_input;
-    case 'common_auth_dialog_passwordTooShort_error': return l10n.common_auth_dialog_passwordTooShort_error(args?['length'] ?? '');
-    case 'common_auth_dialog_passwordInSecure_error': return l10n.common_auth_dialog_passwordInSecure_error;
-    case 'common_auth_dialog_passwordRequired_error': return l10n.common_auth_dialog_passwordRequired_error;
-    case 'common_auth_dialog_fileNameIsSamed_error': return l10n.common_auth_dialog_fileNameIsSamed_error(args?['file'] ?? '');
-    case 'common_auth_dialog_fileNameIsEmpty_error': return l10n.common_auth_dialog_fileNameIsEmpty_error;
-    case 'common_auth_dialog_fileIsExist_error': return l10n.common_auth_dialog_fileIsExist_error(args?['file'] ?? '');
-    case 'common_auth_dialog_fileIsNotExist_error': return l10n.common_auth_dialog_fileIsNotExist_error(args?['file'] ?? '');
-    case 'common_auth_dialog_fileIsNotReadable_error': return l10n.common_auth_dialog_fileIsNotReadable_error(args?['file'] ?? '');
-    case 'common_auth_dialog_fileIsNotWritable_error': return l10n.common_auth_dialog_fileIsNotWritable_error(args?['file'] ?? '');
-    case 'common_auth_dialog_PathIsNotWritable_error': return l10n.common_auth_dialog_PathIsNotWritable_error(args?['file'] ?? '');
-    case 'common_auth_dialog_fileIsEmpty_error': return l10n.common_auth_dialog_fileIsEmpty_error(args?['file'] ?? '');
-    case 'common_auth_dialog_fileIsEncrypted_error': return l10n.common_auth_dialog_fileIsEncrypted_error(args?['file'] ?? '');
-    case 'common_auth_dialog_fileIsDecrypted_error': return l10n.common_auth_dialog_fileIsDecrypted_error(args?['file'] ?? '');
-    default: throw Exception('Key $key not found in AppLocalizations');
+    case 'st_home_drawer_setting_cleanupLabel':
+      return l10n.st_home_drawer_setting_cleanupLabel(
+        (args?['cleanup'] as String),
+      );
+    case 'st_home_drawer_setting_cleanupParam':
+      return l10n.st_home_drawer_setting_cleanupParam(
+        (args?['param'] as String),
+      );
+    case 'st_home_drawer_setting_themeLabel':
+      return l10n.st_home_drawer_setting_themeLabel((args?['theme'] as String));
+    case 'st_home_drawer_setting_langLabel':
+      return l10n.st_home_drawer_setting_langLabel((args?['lang'] as String));
+    case 'st_home_drawer_setting_applockLabel':
+      return l10n.st_home_drawer_setting_applockLabel(
+        (args?['applock'] as String),
+      );
+    case 'st_home_drawer_setting_autolockLabel':
+      return l10n.st_home_drawer_setting_autolockLabel(
+        (args?['autolock'] as String),
+      );
+    case 'st_home_drawer_setting_autoccLabel':
+      return l10n.st_home_drawer_setting_autoccLabel(
+        (args?['autocc'] as String),
+      );
+    case 'st_home_drawer_setting_autosaveLabel':
+      return l10n.st_home_drawer_setting_autosaveLabel(
+        (args?['autosave'] as String),
+      );
+    case 'st_home_drawer_setting_title':
+      return l10n.st_home_drawer_setting_title((args?['title'] as String));
+    case 'cd_setting_mime':
+      return l10n.cd_setting_mime(
+        (args?['status'] as String),
+        args?['tooltip'] ?? '',
+      );
+    case 'st_setting_mime_tooltip':
+      return l10n.st_setting_mime_tooltip;
+    case 'st_home_drawer_directory_title':
+      return l10n.st_home_drawer_directory_title((args?['title'] as String));
+    case 'st_common_global_nav_actionLabel':
+      return l10n.st_common_global_nav_actionLabel((args?['action'] as String));
+    case 'st_common_global_popup_actionLabel':
+      return l10n.st_common_global_popup_actionLabel(
+        (args?['action'] as String),
+      );
+    case 'st_common_global_button_actionLabel':
+      return l10n.st_common_global_button_actionLabel(
+        (args?['action'] as String),
+      );
+    case 'st_home_index_header_defaultTitle':
+      return l10n.st_home_index_header_defaultTitle;
+    case 'st_home_index_counter_incrementLabel':
+      return l10n.st_home_index_counter_incrementLabel;
+    case 'st_home_index_counter_incrementAction':
+      return l10n.st_home_index_counter_incrementAction;
+    case 'st_action_autocrypt_button_label':
+      return l10n.st_action_autocrypt_button_label((args?['action'] as String));
+    case 'st_common_global_info_independent':
+      return l10n.st_common_global_info_independent;
+    case 'st_common_global_info_noGlobal':
+      return l10n.st_common_global_info_noGlobal;
+    case 'st_archive_global_info_compression':
+      return l10n.st_archive_global_info_compression;
+    case 'st_archive_global_info_independent':
+      return l10n.st_archive_global_info_independent;
+    case 'st_decrypt_global_info_atomic':
+      return l10n.st_decrypt_global_info_atomic;
+    case 'st_encrypt_global_info_atomic':
+      return l10n.st_encrypt_global_info_atomic;
+    case 'st_unarchive_global_info_support':
+      return l10n.st_unarchive_global_info_support;
+    case 'st_home_briefing_label':
+      return l10n.st_home_briefing_label((args?['label'] as String));
+    case 'st_multi_file_only_empty_hint':
+      return l10n.st_multi_file_only_empty_hint;
+    case 'st_single_path_empty_hint':
+      return l10n.st_single_path_empty_hint;
+    case 'st_multi_path_empty_hint':
+      return l10n.st_multi_path_empty_hint;
+    case 'st_multi_path_manage_title':
+      return l10n.st_multi_path_manage_title;
+    case 'st_multi_path_paste_hint':
+      return l10n.st_multi_path_paste_hint;
+    case 'st_common_dialog_unsaved_title':
+      return l10n.st_common_dialog_unsaved_title;
+    case 'cd_common_dialog_unsaved_body':
+      return l10n.cd_common_dialog_unsaved_body;
+    case 'st_edit_text_hint':
+      return l10n.st_edit_text_hint;
+    case 'st_multi_path_add_tooltip':
+      return l10n.st_multi_path_add_tooltip;
+    case 'st_multi_path_add_from_input_tooltip':
+      return l10n.st_multi_path_add_from_input_tooltip;
+    case 'st_multi_path_remove_tooltip':
+      return l10n.st_multi_path_remove_tooltip;
+    case 'st_common_form_field_label':
+      return l10n.st_common_form_field_label((args?['field'] as String));
+    case 'st_common_variables_body_label':
+      return l10n.st_common_variables_body_label((args?['label'] as String));
+    case 'rs_common_global_action_copied':
+      return l10n.rs_common_global_action_copied;
+    case 'cd_common_action_edit_notTextFile':
+      return l10n.cd_common_action_edit_notTextFile;
+    case 'cd_common_action_view_notViewable':
+      return l10n.cd_common_action_view_notViewable;
+    case 'rs_common_action_move_success':
+      return l10n.rs_common_action_move_success;
+    case 'rs_common_action_file_error':
+      return l10n.rs_common_action_file_error(args?['err'] ?? '');
+    case 'cd_common_action_rename_exists':
+      return l10n.cd_common_action_rename_exists;
+    case 'st_common_dialog_title':
+      return l10n.st_common_dialog_title((args?['action'] as String));
+    case 'cd_common_dialog_confirm_message':
+      return l10n.cd_common_dialog_confirm_message((args?['action'] as String));
+    case 'cd_vault_action_security_check_failed':
+      return l10n.cd_vault_action_security_check_failed;
+    case 'rs_edit_action_auto_save_failed':
+      return l10n.rs_edit_action_auto_save_failed(args?['error'] ?? '');
+    case 'rs_edit_action_journal_saved':
+      return l10n.rs_edit_action_journal_saved;
+    case 'rs_key_action_success':
+      return l10n.rs_key_action_success(
+        (args?['action'] as String),
+        args?['path'] ?? '',
+      );
+    case 'rs_edit_action_file_write_failed':
+      return l10n.rs_edit_action_file_write_failed(args?['error'] ?? '');
+    case 'cd_key_action_file_invalid':
+      return l10n.cd_key_action_file_invalid(args?['error'] ?? '');
+    case 'st_common_dialog_confirm_label':
+      return l10n.st_common_dialog_confirm_label((args?['action'] as String));
+    case 'rs_clipher_action_decryption_failed':
+      return l10n.rs_clipher_action_decryption_failed(args?['error'] ?? '');
+    case 'rs_clipher_action_encryption_failed':
+      return l10n.rs_clipher_action_encryption_failed(args?['error'] ?? '');
+    case 'rs_autocrypt_action_command_result':
+      return l10n.rs_autocrypt_action_command_result(args?['text'] ?? '');
+    case 'cd_autocrypt_action_no_input':
+      return l10n.cd_autocrypt_action_no_input;
+    case 'common_auth_dialog_passwordTooShort_error':
+      return l10n.common_auth_dialog_passwordTooShort_error(
+        args?['length'] ?? '',
+      );
+    case 'common_auth_dialog_passwordInSecure_error':
+      return l10n.common_auth_dialog_passwordInSecure_error;
+    case 'common_auth_dialog_passwordRequired_error':
+      return l10n.common_auth_dialog_passwordRequired_error;
+    case 'common_auth_dialog_fileNameIsSamed_error':
+      return l10n.common_auth_dialog_fileNameIsSamed_error(args?['file'] ?? '');
+    case 'common_auth_dialog_fileNameIsEmpty_error':
+      return l10n.common_auth_dialog_fileNameIsEmpty_error;
+    case 'common_auth_dialog_fileIsExist_error':
+      return l10n.common_auth_dialog_fileIsExist_error(args?['file'] ?? '');
+    case 'common_auth_dialog_fileIsNotExist_error':
+      return l10n.common_auth_dialog_fileIsNotExist_error(args?['file'] ?? '');
+    case 'common_auth_dialog_fileIsNotReadable_error':
+      return l10n.common_auth_dialog_fileIsNotReadable_error(
+        args?['file'] ?? '',
+      );
+    case 'common_auth_dialog_fileIsNotWritable_error':
+      return l10n.common_auth_dialog_fileIsNotWritable_error(
+        args?['file'] ?? '',
+      );
+    case 'common_auth_dialog_PathIsNotWritable_error':
+      return l10n.common_auth_dialog_PathIsNotWritable_error(
+        args?['file'] ?? '',
+      );
+    case 'common_auth_dialog_fileIsEmpty_error':
+      return l10n.common_auth_dialog_fileIsEmpty_error(args?['file'] ?? '');
+    case 'common_auth_dialog_fileIsEncrypted_error':
+      return l10n.common_auth_dialog_fileIsEncrypted_error(args?['file'] ?? '');
+    case 'common_auth_dialog_fileIsDecrypted_error':
+      return l10n.common_auth_dialog_fileIsDecrypted_error(args?['file'] ?? '');
+    default:
+      throw Exception('Key $key not found in AppLocalizations');
   }
 }
