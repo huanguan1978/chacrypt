@@ -78,7 +78,6 @@ jobs:
           echo "expected_artifact=chabox-build-linux-x64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: latest
           channel: stable
       - run: |
           sudo apt-get update
@@ -140,7 +139,6 @@ jobs:
           echo "expected_artifact=chabox-build-linux-arm64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: latest
           channel: stable
       - run: |
           sudo apt-get update
