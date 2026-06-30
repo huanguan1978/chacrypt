@@ -1,0 +1,17 @@
+<!--
+    setp 1: cp chabox_shared_mime_info.xml ~/.local/share/mime/packages/chabox.xml
+
+-->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/mime-info">
+  <mime-type type="application/x-chabox-encrypted">
+    <comment>ChaBox Encrypted File</comment>
+    <magic priority="80">
+      <match value="CHA" type="string" offset="0">
+        <match value="0123456789" type="byte" offset="3" mask="0xFF"/>
+      </match>
+    </magic>
+    <glob pattern="*.cha"/>
+  </mime-type>
+</mime-info>
