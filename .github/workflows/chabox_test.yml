@@ -1,0 +1,44 @@
+name: flutter test (chabox)
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'chabox/**'
+      - '.github/workflows/chabox_test.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'chabox/**'
+      - '.github/workflows/chabox_test.yml'
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: chabox
+
+jobs:
+  test:
+    name: Flutter Lint and Test
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: latest
+          channel: stable
+
+      - run: flutter pub get
+      - run: dart format --output=none --set-exit-if-changed .
+      - run: flutter analyze
+      - name: Run tests only if present
+        run: |
+          if find test -type f -name "*_test.dart" | grep -q .; then
+            flutter test
+          else
+            echo "No automated Flutter tests found under test/. Skipping test step."
+          fi
