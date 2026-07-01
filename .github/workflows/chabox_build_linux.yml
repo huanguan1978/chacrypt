@@ -73,6 +73,16 @@ jobs:
           name: chabox-prepared-source
           path: chabox
           github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout chapose source at prepared commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.get_prepare_meta.outputs.git_sha }}
+          fetch-depth: 1
+          sparse-checkout: |
+            chapose
+          path: repo
+      - name: Place chapose path dependency
+        run: cp -a repo/chapose ./chapose
       - name: Create temporary workspace root
         run: |
           cat > pubspec.yaml <<'EOF'
@@ -82,6 +92,7 @@ jobs:
             sdk: '>=3.10.0 <4.0.0'
           workspace:
             - chabox
+            - chapose
           EOF
       - name: Print build input summary
         run: |
@@ -92,9 +103,11 @@ jobs:
           echo "git_ref=${{ needs.get_prepare_meta.outputs.git_ref }}"
           echo "git_sha=${{ needs.get_prepare_meta.outputs.git_sha }}"
           echo "expected_artifact=chabox-build-linux-x64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: 3.41.9
+      - name: Install Flutter SDK 3.41.9
+        run: |
+          git clone https://github.com/flutter/flutter.git --depth 1 --branch 3.41.9 "$HOME/flutter"
+          echo "$HOME/flutter/bin" >> "$GITHUB_PATH"
+          echo "$HOME/flutter/bin/cache/dart-sdk/bin" >> "$GITHUB_PATH"
       - name: Print Flutter version
         run: flutter --version
       - run: |
@@ -149,6 +162,16 @@ jobs:
           name: chabox-prepared-source
           path: chabox
           github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout chapose source at prepared commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.get_prepare_meta.outputs.git_sha }}
+          fetch-depth: 1
+          sparse-checkout: |
+            chapose
+          path: repo
+      - name: Place chapose path dependency
+        run: cp -a repo/chapose ./chapose
       - name: Create temporary workspace root
         run: |
           cat > pubspec.yaml <<'EOF'
@@ -158,6 +181,7 @@ jobs:
             sdk: '>=3.10.0 <4.0.0'
           workspace:
             - chabox
+            - chapose
           EOF
       - name: Print build input summary
         run: |
@@ -168,9 +192,11 @@ jobs:
           echo "git_ref=${{ needs.get_prepare_meta.outputs.git_ref }}"
           echo "git_sha=${{ needs.get_prepare_meta.outputs.git_sha }}"
           echo "expected_artifact=chabox-build-linux-arm64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: 3.41.9
+      - name: Install Flutter SDK 3.41.9
+        run: |
+          git clone https://github.com/flutter/flutter.git --depth 1 --branch 3.41.9 "$HOME/flutter"
+          echo "$HOME/flutter/bin" >> "$GITHUB_PATH"
+          echo "$HOME/flutter/bin/cache/dart-sdk/bin" >> "$GITHUB_PATH"
       - name: Print Flutter version
         run: flutter --version
       - run: |
