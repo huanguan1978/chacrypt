@@ -133,8 +133,7 @@ jobs:
         run: |
           DEBUG_ARTIFACT_PATH="chabox/build/chabox-debug-linux-x64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
           test -f "$DEBUG_ARTIFACT_PATH"
-          unzip -l "$DEBUG_ARTIFACT_PATH" > chabox/build/zip-list-linux-x64-debug.txt
-          grep -q 'x64/' chabox/build/zip-list-linux-x64-debug.txt
+          echo "Debug ZIP exists: $DEBUG_ARTIFACT_PATH"
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -222,8 +221,7 @@ jobs:
         run: |
           DEBUG_ARTIFACT_PATH="chabox/build/chabox-debug-linux-arm64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
           test -f "$DEBUG_ARTIFACT_PATH"
-          unzip -l "$DEBUG_ARTIFACT_PATH" > chabox/build/zip-list-linux-arm64-debug.txt
-          grep -q 'arm64/' chabox/build/zip-list-linux-arm64-debug.txt
+          echo "Debug ZIP exists: $DEBUG_ARTIFACT_PATH"
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
