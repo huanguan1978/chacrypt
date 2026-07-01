@@ -63,6 +63,9 @@ jobs:
     name: Build Linux x64
     runs-on: ubuntu-22.04
     needs: get_prepare_meta
+    defaults:
+      run:
+        working-directory: .
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -70,6 +73,16 @@ jobs:
           name: chabox-prepared-source
           path: chabox
           github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create temporary workspace root
+        run: |
+          cat > pubspec.yaml <<'EOF'
+          name: chacrypt_ci
+          publish_to: none
+          environment:
+            sdk: '>=3.10.0 <4.0.0'
+          workspace:
+            - chabox
+          EOF
       - name: Print build input summary
         run: |
           echo "Build target: linux/x64"
@@ -81,32 +94,34 @@ jobs:
           echo "expected_artifact=chabox-build-linux-x64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
       - uses: subosito/flutter-action@v2
         with:
-          channel: stable
+          flutter-version: 3.41.9
+      - name: Print Flutter version
+        run: flutter --version
       - run: |
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev libx11-dev pkg-config cmake ninja-build libblkid-dev
-      - run: flutter pub get
-      - run: flutter build linux --release --obfuscate --split-debug-info=build/split-debug-info/linux/x64
+      - run: cd chabox && flutter pub get
+      - run: cd chabox && flutter build linux --release --obfuscate --split-debug-info=build/split-debug-info/linux/x64
       - name: Assemble build ZIP
         run: |
           ARTIFACT_NAME="chabox-build-linux-x64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
-          (cd build/linux/x64/release && zip -r "../../../$ARTIFACT_NAME" bundle)
+          (cd chabox/build/linux/x64/release && zip -r "../../../$ARTIFACT_NAME" bundle)
       - name: Assemble debug ZIP
         run: |
           DEBUG_ARTIFACT_NAME="chabox-debug-linux-x64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
-          (cd build/split-debug-info/linux && zip -r "../../../$DEBUG_ARTIFACT_NAME" x64)
+          (cd chabox/build/split-debug-info/linux && zip -r "../../../$DEBUG_ARTIFACT_NAME" x64)
       - name: Verify build ZIP structure
         run: |
-          ARTIFACT_PATH="build/chabox-build-linux-x64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
+          ARTIFACT_PATH="chabox/build/chabox-build-linux-x64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
           test -f "$ARTIFACT_PATH"
-          unzip -l "$ARTIFACT_PATH" > build/zip-list-linux-x64.txt
-          grep -q 'bundle/' build/zip-list-linux-x64.txt
+          unzip -l "$ARTIFACT_PATH" > chabox/build/zip-list-linux-x64.txt
+          grep -q 'bundle/' chabox/build/zip-list-linux-x64.txt
       - name: Verify debug ZIP structure
         run: |
-          DEBUG_ARTIFACT_PATH="build/chabox-debug-linux-x64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
+          DEBUG_ARTIFACT_PATH="chabox/build/chabox-debug-linux-x64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
           test -f "$DEBUG_ARTIFACT_PATH"
-          unzip -l "$DEBUG_ARTIFACT_PATH" > build/zip-list-linux-x64-debug.txt
-          grep -q 'x64/' build/zip-list-linux-x64-debug.txt
+          unzip -l "$DEBUG_ARTIFACT_PATH" > chabox/build/zip-list-linux-x64-debug.txt
+          grep -q 'x64/' chabox/build/zip-list-linux-x64-debug.txt
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -124,6 +139,9 @@ jobs:
     name: Build Linux arm64
     runs-on: ubuntu-24.04-arm
     needs: get_prepare_meta
+    defaults:
+      run:
+        working-directory: .
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -131,6 +149,16 @@ jobs:
           name: chabox-prepared-source
           path: chabox
           github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create temporary workspace root
+        run: |
+          cat > pubspec.yaml <<'EOF'
+          name: chacrypt_ci
+          publish_to: none
+          environment:
+            sdk: '>=3.10.0 <4.0.0'
+          workspace:
+            - chabox
+          EOF
       - name: Print build input summary
         run: |
           echo "Build target: linux/arm64"
@@ -142,32 +170,34 @@ jobs:
           echo "expected_artifact=chabox-build-linux-arm64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
       - uses: subosito/flutter-action@v2
         with:
-          channel: stable
+          flutter-version: 3.41.9
+      - name: Print Flutter version
+        run: flutter --version
       - run: |
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev libx11-dev pkg-config cmake ninja-build libblkid-dev
-      - run: flutter pub get
-      - run: flutter build linux --release --target-platform=linux-arm64 --obfuscate --split-debug-info=build/split-debug-info/linux/arm64
+      - run: cd chabox && flutter pub get
+      - run: cd chabox && flutter build linux --release --target-platform=linux-arm64 --obfuscate --split-debug-info=build/split-debug-info/linux/arm64
       - name: Assemble build ZIP
         run: |
           ARTIFACT_NAME="chabox-build-linux-arm64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
-          (cd build/linux/arm64/release && zip -r "../../../$ARTIFACT_NAME" bundle)
+          (cd chabox/build/linux/arm64/release && zip -r "../../../$ARTIFACT_NAME" bundle)
       - name: Assemble debug ZIP
         run: |
           DEBUG_ARTIFACT_NAME="chabox-debug-linux-arm64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
-          (cd build/split-debug-info/linux && zip -r "../../../$DEBUG_ARTIFACT_NAME" arm64)
+          (cd chabox/build/split-debug-info/linux && zip -r "../../../$DEBUG_ARTIFACT_NAME" arm64)
       - name: Verify build ZIP structure
         run: |
-          ARTIFACT_PATH="build/chabox-build-linux-arm64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
+          ARTIFACT_PATH="chabox/build/chabox-build-linux-arm64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
           test -f "$ARTIFACT_PATH"
-          unzip -l "$ARTIFACT_PATH" > build/zip-list-linux-arm64.txt
-          grep -q 'bundle/' build/zip-list-linux-arm64.txt
+          unzip -l "$ARTIFACT_PATH" > chabox/build/zip-list-linux-arm64.txt
+          grep -q 'bundle/' chabox/build/zip-list-linux-arm64.txt
       - name: Verify debug ZIP structure
         run: |
-          DEBUG_ARTIFACT_PATH="build/chabox-debug-linux-arm64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
+          DEBUG_ARTIFACT_PATH="chabox/build/chabox-debug-linux-arm64-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
           test -f "$DEBUG_ARTIFACT_PATH"
-          unzip -l "$DEBUG_ARTIFACT_PATH" > build/zip-list-linux-arm64-debug.txt
-          grep -q 'arm64/' build/zip-list-linux-arm64-debug.txt
+          unzip -l "$DEBUG_ARTIFACT_PATH" > chabox/build/zip-list-linux-arm64-debug.txt
+          grep -q 'arm64/' chabox/build/zip-list-linux-arm64-debug.txt
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
