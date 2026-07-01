@@ -38,7 +38,7 @@ jobs:
         with:
           run-id: ${{ inputs.prepare_run_id }}
           name: chabox-prepared-source
-          path: dist
+          path: dist/chabox
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Read version and prepare metadata
         id: get_version
@@ -68,7 +68,7 @@ jobs:
         with:
           run-id: ${{ inputs.prepare_run_id }}
           name: chabox-prepared-source
-          path: .
+          path: chabox
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Print build input summary
         run: |
@@ -129,7 +129,7 @@ jobs:
         with:
           run-id: ${{ inputs.prepare_run_id }}
           name: chabox-prepared-source
-          path: .
+          path: chabox
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Print build input summary
         run: |

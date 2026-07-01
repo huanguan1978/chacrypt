@@ -85,4 +85,5 @@ jobs:
         with:
           name: chabox-prepared-source
           retention-days: 14
+          include-hidden-files: true
           path: chabox
