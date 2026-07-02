@@ -30,10 +30,13 @@
     <p>
       ChaBox is an open-source, free, no-sign-up, zero-preset offline file security tool for personal and professional use. It supports local encryption, decryption, archiving, unarchiving, and secure wipe. It is ad-free, does not collect data in the background, does not rely on cloud services, and your local files and passwords always stay under your control.
     </p>
+    <p>
+      This app follows the principle of least privilege and uses a secure sandbox for file operations. In sandboxed mode, use the built-in file picker for files or directories instead of drag-and-drop from the system file manager.
+    </p>
     <p>Quick Start (3 core features you can use right away)</p>
     <ul>
       <li>Secure Note: write like a Markdown notebook with immersive editing and live preview, while notes are automatically encrypted at rest.</li>
-      <li>One-click smart encrypt/decrypt: drag and drop files, and ChaBox auto-detects the workflow for fast protection and recovery.</li>
+      <li>One-click smart encrypt/decrypt: add files or directories for fast protection, with automatic workflow detection for quick file recovery.</li>
       <li>Secure wipe (overwrite deletion): securely overwrite sensitive data to reduce plaintext residue risk.</li>
     </ul>
     <p>Advanced Usage (freely combine tools your way)</p>
