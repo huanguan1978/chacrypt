@@ -52,12 +52,16 @@ class _TextClipherEditPageState extends State<TextClipherEditPage> {
   final _focusNode = FocusNode();
   final _controller = TextEditingController();
 
+  final _kDebugMode = sl<bool>(instanceName: 'kDebugMode');
   final _autocc = sl<Caching>().autocc.value;
   int get _secs => ClipDelay.values.byName(_autocc).s;
   SecureClipboardManager get _clipboardManager => SecureClipboardManager(
     seconds: _secs,
-    onCompleted: () =>
-        sl<Logger>().finer('SecureClipboard, AutoClean, secs:$_secs'),
+    onCompleted: () {
+      if (_kDebugMode) {
+        sl<Logger>().finer('SecureClipboard, AutoClean, secs:$_secs');
+      }
+    },
   );
 
   late final File _tempFile;

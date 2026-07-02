@@ -12,7 +12,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:basic_logger/basic_logger.dart';
-import 'package:flutter/foundation.dart' show ValueNotifier, kDebugMode;
+import 'package:flutter/foundation.dart' show ValueNotifier;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_it/flutter_it.dart';
 
@@ -38,6 +38,9 @@ class Caching {
   /// system locale languageCode
   var langCode = GetIt.I<String>(instanceName: 'langCode');
 
+  /// App is kDebugMode ?
+  var kDebugMode = GetIt.I<bool>(instanceName: 'kDebugMode');
+
   final prefs = GetIt.I<SharedPreferences>();
   final secret = GetIt.I<Secret>();
   final logger = GetIt.I<BasicLogger>();
@@ -50,7 +53,11 @@ class Caching {
         : ValueNotifier(generatePassword(ChaContant.userKeyDefaultLength));
     if (rawValue == null || rawValue.isEmpty) {
       prefs.setString('secret', secret.ensixteen(curValue.value)).then((ok) {
-        logger.warning('ValueNotifier, init password.value: ${curValue.value}');
+        if (kDebugMode) {
+          logger.warning(
+            'ValueNotifier, init password.value: ${curValue.value}',
+          );
+        }
       });
     }
 
