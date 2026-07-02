@@ -5,7 +5,7 @@
   <id>com.iche2.chabox</id>
   
   <name>ChaBox</name>
-  <summary>Open-source, free, no-sign-up, zero-preset offline file security workstation with high-performance encryption/decryption, archiving, and secure wipe.</summary>
+  <summary>Offline file security workstation for encrypt/decrypt, archiving, and secure wipe</summary>
   
   <metadata_license>MIT</metadata_license>
   <project_license>PolyForm-Noncommercial-1.0.0</project_license>
@@ -61,7 +61,7 @@
   <screenshots>
     <screenshot type="default">
       <image>https://webpath.iche2.com/screenshots/chabox/linux/en/home-default.png</image>
-	  <caption>Encrypt files, use Secure Notes, and run Secure Erase from one home screen for a streamlined privacy workflow.</caption>
+    <caption>Encrypt files, take Secure Notes, and run Secure Erase from one privacy-focused home screen.</caption>
     </screenshot>
 
     <screenshot>
@@ -70,7 +70,7 @@
     </screenshot>
     <screenshot>
       <image>https://webpath.iche2.com/screenshots/chabox/linux/en/vault-list.png</image>
-	    <caption>File Vault offers visual listing and categorization for centralized viewing and management of encrypted files.</caption>
+      <caption>File Vault provides visual listing and categories for centralized encrypted file management.</caption>
     </screenshot>    
     <screenshot>
       <image>https://webpath.iche2.com/screenshots/chabox/linux/en/vault-filter.png</image>
@@ -82,7 +82,7 @@
     </screenshot>
     <screenshot>
       <image>https://webpath.iche2.com/screenshots/chabox/linux/en/note-preview.png</image>
-	    <caption> Write and preview Markdown in real time within a secure environment for a better private note-taking experience. </caption>
+      <caption>Write and preview Markdown in real time in a secure workspace for private note taking.</caption>
     </screenshot>
     <screenshot>
       <image>https://webpath.iche2.com/screenshots/chabox/linux/en/wipe-example.png</image>
@@ -91,11 +91,11 @@
 
     <screenshot>
       <image>https://webpath.iche2.com/screenshots/chabox/linux/en/home-settings.png</image>
-	    <caption>Manage passwords, lock settings, and anti-leak protections in one settings center for safer daily use. </caption>
+      <caption>Manage passwords, lock settings, and anti-leak protections in one safer settings center.</caption>
     </screenshot>
     <screenshot>
       <image>https://webpath.iche2.com/screenshots/chabox/linux/en/archive-example.png</image>
-	    <caption>The Archive tool provides a standardized workflow for more efficient and controllable batch processing. </caption>
+      <caption>Archive provides a standardized workflow for efficient and controllable batch processing.</caption>
     </screenshot>
     <screenshot>
       <image>https://webpath.iche2.com/screenshots/chabox/linux/en/archive-source-manage.png</image>
@@ -110,11 +110,10 @@
 
     <category>System</category>
     <category>Security</category>
-    <category>Cryptography</category>
   </categories>
   <provides>
-    <mime>application/x-chabox-encrypted</mime>
-    <mime>inode/directory</mime>
+    <mediatype>application/x-chabox-encrypted</mediatype>
+    <mediatype>inode/directory</mediatype>
     <binary>chabox</binary>
   </provides>
   <branding>
