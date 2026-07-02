@@ -4,7 +4,7 @@ Type=Application
 
 Name=ChaBox
 Comment=Offline Secure Vault
-Categories=System;Security;Cryptography;
+Categories=System;Security;
 
 Icon=com.iche2.chabox
 Exec=chabox %U
