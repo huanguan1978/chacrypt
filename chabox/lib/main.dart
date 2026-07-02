@@ -91,6 +91,10 @@ void main(List<String> args) {
   final langCodes = LangEnum.values.map((e) => e.name);
   final langCode = supportLanguage(langCodes);
   GetIt.instance.registerSingleton<String>(langCode, instanceName: 'langCode');
+  GetIt.instance.registerSingleton<bool>(
+    kDebugMode,
+    instanceName: 'kDebugMode',
+  );
 
   WidgetsFlutterBinding.ensureInitialized();
   if (!kDebugMode) {

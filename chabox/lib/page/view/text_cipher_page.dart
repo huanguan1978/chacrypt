@@ -48,7 +48,6 @@ class TextCipherViewPage extends StatelessWidget {
             if (text.isNotEmpty && text.contains(pattern)) {
               final variables = _loadAllVariables();
               text = Tmpl(variables).tmpl(text);
-              debugPrint(text);
             }
 
             return SingleChildScrollView(
