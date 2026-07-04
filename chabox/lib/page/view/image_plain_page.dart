@@ -17,6 +17,7 @@ import 'package:path/path.dart' as p;
 
 import '../../thirdparty/ft_textmime.dart';
 import '../../utils/file_helper.dart';
+import 'widget/markdown_image_builder.dart';
 
 class ImagePlainViewPage extends StatelessWidget {
   const ImagePlainViewPage(this.mdfile, {super.key});
@@ -35,7 +36,10 @@ class ImagePlainViewPage extends StatelessWidget {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
             return SingleChildScrollView(
-              child: MarkdownBody(data: snapshot.data ?? ''),
+              child: MarkdownBody(
+                data: snapshot.data ?? '',
+                imageBuilder: markdownImageBuilder,
+              ),
             );
           }
         },
@@ -47,7 +51,11 @@ class ImagePlainViewPage extends StatelessWidget {
     final (realName, fileExts) = fileNameWithExts(file.path);
     final isImageFile = isImageMimeType(realName);
     if (!isImageFile) return 'only view image file.';
-    if (fileExts.isEmpty) return '![$realName](${file.path})';
+    if (fileExts.isEmpty) {
+      // Use a proper file:// URI so Markdown parser handles spaces and escapes.
+      final uri = Uri.file(file.path);
+      return '![$realName](${uri.toString()})';
+    }
 
     return 'invalid view, ${file.path}.';
   }

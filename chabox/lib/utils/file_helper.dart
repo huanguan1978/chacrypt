@@ -8,6 +8,7 @@
  * https://github.com/huanguan1978/chacrypt
  */
 
+import 'dart:io';
 import 'package:path/path.dart' as p;
 
 /// Specialized file categories for UI display.
@@ -206,4 +207,93 @@ String abbreviatePath(
 /// returns true if the paths are identical.
 bool isWithinPath(String parent, String child) {
   return p.equals(parent, child) || p.isWithin(parent, child);
+}
+
+/// Safely converts a [Uri] to a platform file system path.
+///
+/// This function:
+/// - Attempts robust conversions in a small number of steps and returns as
+///   soon as a reasonable path is obtained.
+/// - First tries `path.fromUri` for standard file:// URIs.
+/// - Then tries `uri.toFilePath(...)` with a platform hint.
+/// - If the URI looks like a drive-letter-as-scheme (e.g. `e:/...`) it treats
+///   the scheme as a Windows drive letter and constructs a path accordingly.
+/// - As a final fallback it uses the URI string, normalizes separators for
+///   the current platform, strips `file://` prefix when present, and returns
+///   a normalized path.
+///
+/// The function never throws; it always returns a normalized non-empty string.
+String safeFilePath(Uri u) {
+  final bool isWindows = Platform.isWindows;
+
+  // Use decoded textual form early to handle percent-encoded path parts like "%5C"
+  // but avoid altering scheme separators — decodeFull is acceptable here because
+  // we're only interested in file-path text that may have been percent-encoded.
+  final String rawDecoded = Uri.decodeFull(u.toString());
+
+  // ignore: no_leading_underscores_for_local_identifiers
+  String _norm(String? s) {
+    if (s == null || s.isEmpty) return '';
+    return p.normalize(s);
+  }
+
+  // 0) Quick textual sanitization: strip file:// and normalize separators once.
+  String sanitized = rawDecoded;
+  if (sanitized.startsWith('file://')) {
+    sanitized = sanitized.replaceFirst(RegExp(r'^file:///*'), '');
+  }
+
+  // Normalize separators according to platform when obvious mismatch exists.
+  if (isWindows) {
+    if (sanitized.contains('/') && !sanitized.contains(r'\')) {
+      sanitized = sanitized.replaceAll('/', Platform.pathSeparator);
+    }
+  } else {
+    if (sanitized.contains(r'\') && !sanitized.contains('/')) {
+      sanitized = sanitized.replaceAll(r'\', Platform.pathSeparator);
+    }
+  }
+
+  // If sanitized already looks like an absolute path for the current platform,
+  // return it immediately.
+  if (sanitized.isNotEmpty) {
+    if (isWindows) {
+      if (RegExp(r'^[A-Za-z]:[\\/]').hasMatch(sanitized) ||
+          sanitized.startsWith(r'\\')) {
+        return _norm(sanitized);
+      }
+    } else {
+      if (sanitized.startsWith('/')) return _norm(sanitized);
+    }
+  }
+
+  // 1) Prefer path.fromUri for standard file:// URIs (may throw on exotic URIs).
+  try {
+    final fromPath = p.fromUri(u);
+    final n = _norm(fromPath);
+    if (n.isNotEmpty) return n;
+  } catch (_) {}
+
+  // 2) Try Uri.toFilePath with platform hint.
+  try {
+    final fp = u.toFilePath(windows: isWindows);
+    final n = _norm(fp);
+    if (n.isNotEmpty) return n;
+  } catch (_) {}
+
+  // 3) Handle drive-letter-as-scheme like "e:/..." where scheme == 'e'
+  if (u.scheme.length == 1 && RegExp(r'^[A-Za-z]$').hasMatch(u.scheme)) {
+    var candidate = '${u.scheme}:${u.path}';
+    if (isWindows) {
+      candidate = candidate.replaceAll('/', Platform.pathSeparator);
+    }
+    final n = _norm(candidate);
+    if (n.isNotEmpty) return n;
+  }
+
+  // 4) Final fallback: return normalized sanitized text or rawDecoded.
+  final finalNorm = _norm(sanitized);
+  if (finalNorm.isNotEmpty) return finalNorm;
+
+  return _norm(rawDecoded);
 }

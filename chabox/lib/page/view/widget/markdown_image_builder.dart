@@ -20,6 +20,7 @@ import 'package:path/path.dart' as p;
 import '../../../core/constant.dart' show chaFileExtName;
 import '../../../thirdparty/ft_textmime.dart';
 import '../../../utils/caching.dart';
+import '../../../utils/file_helper.dart';
 
 /// Builds the widget used by MarkdownBody to render image tags.
 ///
@@ -36,9 +37,8 @@ import '../../../utils/caching.dart';
 /// the image widget's own `errorBuilder` or the async preview fallback.
 Widget markdownImageBuilder(Uri uri, String? title, String? alt) {
   final bool isLocal = uri.scheme.isEmpty || uri.scheme == 'file';
-
   if (isLocal) {
-    final path = uri.toFilePath();
+    final path = safeFilePath(uri);
 
     if (p.extension(path) == chaFileExtName) {
       final baseName = p.withoutExtension(path);
@@ -77,8 +77,10 @@ Widget markdownImageBuilder(Uri uri, String? title, String? alt) {
     );
   }
 
+  final localPath = safeFilePath(uri);
+  // debugPrint('Loading image from: $localPath');
   return Image.file(
-    File(uri.toFilePath()),
+    File(localPath),
     semanticLabel: alt,
     // ignore: unnecessary_underscores
     errorBuilder: (_, error, __) => _MarkdownImageFallback(

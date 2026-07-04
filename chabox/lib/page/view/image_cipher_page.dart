@@ -51,24 +51,9 @@ class ImageCipherViewPage extends StatelessWidget {
     final (realName, _) = fileNameWithExts(file.path);
     final isImageFile = isImageMimeType(realName);
     if (!isImageFile) return 'only view image file.';
-    return '![$realName](${file.path})';
 
-    /*
-    if (fileExts.isEmpty) {
-      final memFile = MemoryFileSystem().file(
-        p.basenameWithoutExtension(file.path),
-      );
-      await fileDecrypt(
-        deriveKey(sl<Caching>().password.value),
-        file,
-        memFile,
-      ).catchError((error) {
-        memFile.writeAsStringSync("Decryption failed: $error");
-      });
-      return memFile.readAsString();
-    }
-    */
-    // return 'invalid view, ${file.path}.';
+    final uri = Uri.file(file.path);
+    return '![$realName](${uri.toString()})';
   }
 
   // cls.lastline
