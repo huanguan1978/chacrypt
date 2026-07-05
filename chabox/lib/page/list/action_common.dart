@@ -53,6 +53,7 @@ void onFileSelectedAction(
       final fileName = p.basename(file.path);
       final fileModified = file.lastModifiedSync();
       final params = ShareParams(
+        title: fileName,
         files: [
           XFile(
             file.path,

@@ -226,10 +226,12 @@ class FileListViewState extends State<FileListView> {
           ),
         )
         .toList();
-    SharePlus.instance.share(ShareParams(files: xfiles)).then((value) {
-      if (!mounted) return;
-      context.showSnackBar(value.toString());
-    });
+    SharePlus.instance
+        .share(ShareParams(title: "Share Files", files: xfiles))
+        .then((value) {
+          if (!mounted) return;
+          context.showSnackBar(value.toString());
+        });
   }
 
   Future<void> _showFilterDialog() async {
