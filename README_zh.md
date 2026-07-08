@@ -50,6 +50,18 @@ Chapose 是一款专为终端用户打造的轻量级、专业工具。
 
 ---
 
+## 🚀 安装方式
+
+不想自行编译？ChaCrypt 也提供预编译二进制版本：
+
+### ChaPose (CLI)
+可直接参考 [Chapose 中文文档](./chapose/README_zh.md) 中的“快速安装”章节完成安装。
+
+### ChaBox (GUI)
+已提供 `Windows`、`macOS`、`Linux`、`Android`、`iOS` 平台的预编译安装包，可通过 [ChaBox 官方下载页](https://webpath.iche2.com/app/chabox/download_en.html) 获取。
+
+---
+
 ## 📖 文档与支持
 
 详细的技术指南、配置手册及常见问题（FAQ）位于各子项目的 `doc/` 目录下。

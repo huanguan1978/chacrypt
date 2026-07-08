@@ -50,6 +50,18 @@ Chapose is a lightweight, professional-grade tool for those who live in the term
 
 ---
 
+## 🚀 Installation
+
+Prefer not to build from source? Precompiled binaries are available for both ChaCrypt applications:
+
+### ChaPose (CLI)
+See the [Chapose documentation](./chapose/README.md) for the quick binary installation method.
+
+### ChaBox (GUI)
+Prebuilt installers are available for `Windows`, `macOS`, `Linux`, `Android`, and `iOS`. Download the appropriate package from the [ChaBox download page](https://webpath.iche2.com/app/chabox/download_en.html).
+
+---
+
 ## 📖 Documentation & Support
 
 Detailed technical guides, configuration manuals, and FAQs are located within the `doc/` directory of each sub-project. 
