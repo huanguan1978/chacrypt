@@ -56,6 +56,7 @@
 | 场景 | 中文文档 (Chinese) | English Docs |
 | :--- | :--- | :--- |
 | **快速入门** | [两分钟开启隐私防护](./doc/zh/start.md) | [Quick Start](./doc/en/start.md) |
+| **移动端指南** | [移动端最佳实践指南](./doc/zh/mobile.md) | [Mobile Best Practices](./doc/en/mobile.md) |
 | **深度探索** | [原子化工具与路径管理](./doc/zh/guide.md) | [Advanced Tools](./doc/en/guide.md) |
 | **安全设置** | [配置您的私人工作站](./doc/zh/settings.md) | [Configuration](./doc/en/settings.md) |
 | **常见问题** | [FAQ 与安全原理](./doc/zh/faq.md) | [FAQ](./doc/en/faq.md) |

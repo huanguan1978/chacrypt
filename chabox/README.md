@@ -56,6 +56,7 @@ The manuals are categorized by language and scenario. Click the links below to n
 | Scenario | Chinese Docs (中文) | English Docs |
 | :--- | :--- | :--- |
 | **Quick Start** | [Two Minutes to Privacy](./doc/zh/start.md) | [Quick Start](./doc/en/start.md) |
+| **Mobile Guide** | [Mobile Best Practices](./doc/zh/mobile.md) | [Mobile Best Practices](./doc/en/mobile.md) |
 | **Deep Dive** | [Atomic Tools & Path Management](./doc/zh/guide.md) | [Advanced Tools](./doc/en/guide.md) |
 | **Security Settings** | [Configuring Your Private Workstation](./doc/zh/settings.md) | [Configuration](./doc/en/settings.md) |
 | **FAQ** | [FAQ & Security Principles](./doc/zh/faq.md) | [FAQ](./doc/en/faq.md) |
@@ -108,4 +109,4 @@ If you find this tool helpful and would like to see it continue to improve and e
 *   **Source Code License**: The source code is released under the [PolyForm Noncommercial 1.0.0](./LICENSE) license. Users are encouraged to build and adapt the software for personal use.
 *   **Binary Distribution Policy**: To ensure the integrity and security of our software, official pre-compiled binaries are distributed exclusively through authorized channels. This centralized approach mitigates the risk of malicious code injection and ensures the authenticity of the software source. Please note that commercial use of the software must strictly adhere to the license terms.
 *   **End-User License Agreement (EULA)**: Official pre-compiled binaries are subject to our [End-User License Agreement (EULA)](EULA.md), which outlines privacy commitments (including our zero-data-collection policy) and prohibitions against reverse engineering. Please review this agreement before installation.
-*   **Third-Party Notices**: This software incorporates various open-source dependencies. For a detailed list and their respective license disclosures, please refer to the [Third-Party Notices (THIRD-PARTY-NOTICES_zh.md)](THIRD-PARTY-NOTICES.md).
+*   **Third-Party Notices**: This software incorporates various open-source dependencies. For a detailed list and their respective license disclosures, please refer to the [Third-Party Notices (THIRD-PARTY-NOTICES.md)](THIRD-PARTY-NOTICES.md).

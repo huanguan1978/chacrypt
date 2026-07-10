@@ -82,7 +82,7 @@ ChaBox's unified local file manager actually has two sequential capabilities:
 
 These two layers behave differently depending on the platform:
 
-*   **Mobile (Android / iOS)**: You can only select and manage directories inside the app sandbox. External directories outside the sandbox are not accessible. On mobile, the file manager is primarily for handling sandbox files and the output directories configured under "File Output Directory Settings." For cross-device transfer or backup, we recommend using cloud storage as a relay for encrypted files.
+*   **Mobile (Android / iOS)**: You can only select and manage directories inside the app sandbox. External directories outside the sandbox are not accessible. On mobile, the file manager is primarily for handling sandbox files and the output directories configured under "File Output Directory Settings." For cross-device transfer or backup, we recommend using cloud storage as a relay for encrypted files. For a comprehensive walkthrough of mobile storage and secure data routing, see the dedicated [Mobile Best Practices Guide](./mobile.md).
 *   **Desktop (Windows / macOS / Linux)**: You can use "File Output Directory Settings" to specify directories outside the sandbox, allowing ChaBox to manage files directly on external drives, shared folders, or regular local directories.
 
 Also, file manager directories and cloud backup serve different purposes:

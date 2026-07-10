@@ -55,7 +55,7 @@ Standard file deletion merely marks storage blocks as free, making recovery easy
 
 *   **Local Physical Destruction**: Targets and overwrites the physical blocks of files on your local storage. Supports drag-and-drop batch operations for multiple items.
 *   **Customizable Wiping Strength**: Before executing, you can fine-tune the **wiping algorithm (level)** and **overwrite passes (rounds)**. Increasing the rounds ensures that the data is physically unrecoverable by any data recovery tools.
-*   **Mobile Note**: On mobile, Android / iOS sandbox restrictions apply, so ChaBox can only access and securely erase files inside its own app sandbox.
+*   **Mobile Note**: On mobile, Android / iOS sandbox restrictions apply, so ChaBox can only access and securely erase files inside its own app sandbox. For deep details on mobile security mechanisms and optimized workflows, please refer to the dedicated [Mobile Best Practices Guide](./mobile.md).
 
 ![Secure Erase Interface](../img/wipe-default.png)
 
