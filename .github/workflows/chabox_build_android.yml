@@ -1,0 +1,222 @@
+name: chabox build (android)
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+permissions:
+  contents: read
+  actions: read
+
+on:
+  workflow_dispatch:
+    inputs:
+      prepare_run_id:
+        description: Run ID of chabox prepare workflow
+        required: true
+        type: string
+      use_release_keystore:
+        description: Use release keystore from GitHub Secrets (otherwise debug key is used)
+        required: true
+        default: false
+        type: boolean
+
+defaults:
+  run:
+    working-directory: chabox
+
+jobs:
+  get_prepare_meta:
+    name: Read Prepared Source Metadata
+    runs-on: ubuntu-22.04
+    outputs:
+      app_version: ${{ steps.get_version.outputs.app_version }}
+      app_version_base: ${{ steps.get_version.outputs.app_version_base }}
+      git_ref: ${{ steps.get_version.outputs.git_ref }}
+      git_sha: ${{ steps.get_version.outputs.git_sha }}
+      prepare_timestamp_utc: ${{ steps.get_version.outputs.prepare_timestamp_utc }}
+      prepare_run_id_meta: ${{ steps.get_version.outputs.prepare_run_id_meta }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ inputs.prepare_run_id }}
+          name: chabox-prepared-source
+          path: dist
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Read version and prepare metadata
+        id: get_version
+        run: |
+          APP_VERSION=$(grep '^version:' dist/chabox/pubspec.yaml | sed 's/version: //g' | tr -d '[:space:]')
+          APP_VERSION_BASE="${APP_VERSION%%+*}"
+          source dist/chabox/.prepare/PREPARE_INFO.env
+          echo "app_version=$APP_VERSION" >> "$GITHUB_OUTPUT"
+          echo "app_version_base=$APP_VERSION_BASE" >> "$GITHUB_OUTPUT"
+          echo "git_ref=$PREPARE_GIT_REF" >> "$GITHUB_OUTPUT"
+          echo "git_sha=$PREPARE_GIT_SHA" >> "$GITHUB_OUTPUT"
+          echo "prepare_timestamp_utc=$PREPARE_TIMESTAMP_UTC" >> "$GITHUB_OUTPUT"
+          echo "prepare_run_id_meta=$PREPARE_RUN_ID" >> "$GITHUB_OUTPUT"
+          echo "Prepare metadata:"
+          echo "  input_prepare_run_id=${{ inputs.prepare_run_id }}"
+          echo "  prepare_run_id_meta=$PREPARE_RUN_ID"
+          echo "  prepare_timestamp_utc=$PREPARE_TIMESTAMP_UTC"
+          echo "  git_ref=$PREPARE_GIT_REF"
+          echo "  git_sha=$PREPARE_GIT_SHA"
+
+  build_android_apk:
+    name: Build Android APK
+    runs-on: ubuntu-22.04
+    needs: get_prepare_meta
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ inputs.prepare_run_id }}
+          name: chabox-prepared-source
+          path: chabox
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Print build input summary
+        run: |
+          echo "Build target: android/apk"
+          echo "prepare_run_id(input)=${{ inputs.prepare_run_id }}"
+          echo "prepare_run_id(meta)=${{ needs.get_prepare_meta.outputs.prepare_run_id_meta }}"
+          echo "prepare_timestamp_utc=${{ needs.get_prepare_meta.outputs.prepare_timestamp_utc }}"
+          echo "git_ref=${{ needs.get_prepare_meta.outputs.git_ref }}"
+          echo "git_sha=${{ needs.get_prepare_meta.outputs.git_sha }}"
+          echo "expected_artifact=chabox-build-android-apk-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
+      - name: Checkout chapose source at prepared commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.get_prepare_meta.outputs.git_sha }}
+          fetch-depth: 1
+          sparse-checkout: |
+            chapose
+          path: repo
+      - name: Place chapose path dependency
+        run: cp -a repo/chapose ./chapose
+        working-directory: .
+      - name: Create temporary workspace root
+        run: |
+          cat > pubspec.yaml <<'EOF'
+          name: chacrypt_ci
+          publish_to: none
+          environment:
+            sdk: '>=3.10.0 <4.0.0'
+          workspace:
+            - chabox
+            - chapose
+          EOF
+        working-directory: .
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Validate Android project files
+        run: |
+          if [ ! -d android ]; then
+            echo "Error: chabox/android not found. Android platform files are missing."
+            echo "Run: flutter create --platforms=android . (inside chabox) and commit generated files."
+            exit 1
+          fi
+
+          if [ ! -f android/app/build.gradle ] && [ ! -f android/app/build.gradle.kts ]; then
+            echo "Error: android/app/build.gradle(.kts) not found."
+            exit 1
+          fi
+
+      - name: Configure Android release keystore
+        if: ${{ inputs.use_release_keystore }}
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          if [ -z "$ANDROID_KEYSTORE_BASE64" ] || [ -z "$ANDROID_KEY_ALIAS" ] || [ -z "$ANDROID_KEYSTORE_PASSWORD" ] || [ -z "$ANDROID_KEY_PASSWORD" ]; then
+            echo "Error: Missing one or more Android signing secrets."
+            echo "Required: ANDROID_KEYSTORE_BASE64, ANDROID_KEY_ALIAS, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_PASSWORD"
+            exit 1
+          fi
+
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/release-keystore.jks
+
+          cat > android/key.properties <<EOF
+          storePassword=$ANDROID_KEYSTORE_PASSWORD
+          keyPassword=$ANDROID_KEY_PASSWORD
+          keyAlias=$ANDROID_KEY_ALIAS
+          storeFile=app/release-keystore.jks
+          EOF
+
+          echo "Configured android/key.properties for release signing."
+
+      - name: Note signing mode
+        if: ${{ !inputs.use_release_keystore }}
+        run: |
+          echo "Notice: Building release APK without custom keystore secrets."
+          echo "Result will typically be signed with debug key unless Android project defines another release signing config."
+
+      - run: flutter pub get
+      - run: flutter build apk --release --obfuscate --split-debug-info=build/split-debug-info/android
+
+      - name: Assemble normalized build ZIP
+        run: |
+          ARTIFACT_NAME="chabox-build-android-apk-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
+          BUNDLE_ROOT="build/_bundle/chabox-build"
+          mkdir -p "$BUNDLE_ROOT/payload"
+          cp build/app/outputs/flutter-apk/app-release.apk "$BUNDLE_ROOT/payload/chabox-release.apk"
+
+          cat > "$BUNDLE_ROOT/BUILD_INFO.txt" <<EOF
+          format_version=1
+          artifact_type=build_zip
+          artifact_name=$ARTIFACT_NAME
+          project=chabox
+          version=${{ needs.get_prepare_meta.outputs.app_version_base }}
+          version_full=${{ needs.get_prepare_meta.outputs.app_version }}
+          git_ref=${{ needs.get_prepare_meta.outputs.git_ref }}
+          git_sha=${{ needs.get_prepare_meta.outputs.git_sha }}
+          run_id=${{ github.run_id }}
+          run_attempt=${{ github.run_attempt }}
+          target_os=android
+          target_arch=apk
+          built_at_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          prepare_run_id=${{ inputs.prepare_run_id }}
+          EOF
+
+          mkdir -p "$BUNDLE_ROOT/meta/doc/en" "$BUNDLE_ROOT/meta/doc/zh"
+          cp LICENSE "$BUNDLE_ROOT/meta/"
+          cp README.md README_zh.md "$BUNDLE_ROOT/meta/"
+          cp doc/en/*.md "$BUNDLE_ROOT/meta/doc/en/"
+          cp doc/zh/*.md "$BUNDLE_ROOT/meta/doc/zh/"
+
+          (cd build/_bundle && zip -r "../$ARTIFACT_NAME" chabox-build)
+      - name: Verify normalized ZIP structure
+        run: |
+          ARTIFACT_PATH="build/chabox-build-android-apk-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip"
+          test -f "$ARTIFACT_PATH"
+          unzip -l "$ARTIFACT_PATH" > build/zip-list-android-apk.txt
+          grep -q 'chabox-build/BUILD_INFO.txt' build/zip-list-android-apk.txt
+          grep -q 'chabox-build/payload/chabox-release.apk' build/zip-list-android-apk.txt
+          grep -q 'chabox-build/meta/LICENSE' build/zip-list-android-apk.txt
+          grep -q 'chabox-build/meta/doc/en/' build/zip-list-android-apk.txt
+          grep -q 'chabox-build/meta/doc/zh/' build/zip-list-android-apk.txt
+
+      - name: Verify APK output exists
+        run: |
+          test -f build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Verify debug artifact exists
+        run: |
+          DEBUG_ARTIFACT_PATH="build/split-debug-info/android"
+          test -d "$DEBUG_ARTIFACT_PATH"
+          echo "Debug artifact directory exists: $DEBUG_ARTIFACT_PATH"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chabox-build-android-apk-${{ needs.get_prepare_meta.outputs.app_version_base }}
+          retention-days: 30
+          path: chabox/build/chabox-build-android-apk-${{ needs.get_prepare_meta.outputs.app_version_base }}.zip
+
+      - name: Upload debug artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chabox-debug-android-${{ needs.get_prepare_meta.outputs.app_version_base }}
+          retention-days: 30
+          path: chabox/build/split-debug-info/android
