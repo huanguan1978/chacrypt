@@ -28,6 +28,9 @@ jobs:
   get_prepare_meta:
     name: Read Prepared Source Metadata
     runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: .
     outputs:
       app_version: ${{ steps.get_version.outputs.app_version }}
       app_version_base: ${{ steps.get_version.outputs.app_version_base }}
@@ -40,7 +43,7 @@ jobs:
         with:
           run-id: ${{ inputs.prepare_run_id }}
           name: chabox-prepared-source
-          path: dist
+          path: dist/chabox
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Read version and prepare metadata
         id: get_version
