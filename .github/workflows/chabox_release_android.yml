@@ -87,3 +87,5 @@ jobs:
           files: |
             release-assets/*.apk
             release-assets/SHA256SUMS-android.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
