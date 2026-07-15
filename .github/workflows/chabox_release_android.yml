@@ -77,15 +77,15 @@ jobs:
         run: |
           cd release-assets
           sha256sum *.apk > SHA256SUMS-android.txt
-      - uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ steps.parse_info.outputs.tag }}
-          target_commitish: ${{ steps.parse_info.outputs.git_sha }}
-          name: ${{ steps.parse_info.outputs.tag }}
-          draft: true
-          generate_release_notes: true
-          files: |
-            release-assets/*.apk
-            release-assets/SHA256SUMS-android.txt
+      - name: Create GitHub Release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.parse_info.outputs.tag }}" \
+            --repo "${{ github.repository }}" \
+            --target "${{ steps.parse_info.outputs.git_sha }}" \
+            --title "${{ steps.parse_info.outputs.tag }}" \
+            --draft \
+            --generate-notes \
+            release-assets/*.apk \
+            release-assets/SHA256SUMS-android.txt
