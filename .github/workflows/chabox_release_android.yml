@@ -14,11 +14,16 @@ on:
 permissions:
   contents: write
   actions: read
+  # Note: If still getting 403, create a PAT with 'repo' scope, store as RELEASE_TOKEN secret,
+  # and replace secrets.GITHUB_TOKEN with secrets.RELEASE_TOKEN in the release step.
 
 jobs:
   release:
     name: Draft GitHub Release
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+      actions: read
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -79,7 +84,7 @@ jobs:
           sha256sum *.apk > SHA256SUMS-android.txt
       - name: Create GitHub Release
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
           gh release create "${{ steps.parse_info.outputs.tag }}" \
             --repo "${{ github.repository }}" \
