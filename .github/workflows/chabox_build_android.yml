@@ -149,7 +149,7 @@ jobs:
           storePassword=$ANDROID_KEYSTORE_PASSWORD
           keyPassword=$ANDROID_KEY_PASSWORD
           keyAlias=$ANDROID_KEY_ALIAS
-          storeFile=app/release-keystore.jks
+          storeFile=release-keystore.jks
           EOF
 
           echo "Configured android/key.properties for release signing."
