@@ -1,0 +1,89 @@
+name: chabox release (android)
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_run_id:
+        description: Build workflow run ID to consume artifacts from
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  release:
+    name: Draft GitHub Release
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ inputs.build_run_id }}
+          pattern: chabox-build-android-apk-*
+          path: dist
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract APK and Parse Metadata
+        id: parse_info
+        run: |
+          if [ ! -d dist ] || [ -z "$(ls -A dist)" ]; then
+            echo "Error: No artifacts downloaded. Please verify build_run_id."
+            exit 1
+          fi
+          
+          mkdir -p extracted
+          unzip dist/chabox-build-android-apk-*/chabox-build-android-apk-*.zip -d extracted
+          
+          BUILD_INFO="extracted/chabox-build/BUILD_INFO.txt"
+          if [ ! -f "$BUILD_INFO" ]; then
+            echo "Error: BUILD_INFO.txt not found in build artifact."
+            exit 1
+          fi
+          
+          VERSION=$(grep '^version=' "$BUILD_INFO" | cut -d'=' -f2 | tr -d '[:space:]')
+          GIT_SHA=$(grep '^git_sha=' "$BUILD_INFO" | cut -d'=' -f2 | tr -d '[:space:]')
+          GIT_REF=$(grep '^git_ref=' "$BUILD_INFO" | cut -d'=' -f2 | tr -d '[:space:]')
+          
+          if [ -z "$VERSION" ] || [ -z "$GIT_SHA" ]; then
+            echo "Error: version or git_sha missing from BUILD_INFO.txt"
+            exit 1
+          fi
+          
+          if [[ "$GIT_REF" =~ ^refs/tags/ ]]; then
+            TAG="${GIT_REF#refs/tags/}"
+          else
+            TAG="chabox-v$VERSION"
+          fi
+          
+          if [[ ! "$TAG" =~ ^chabox-v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Error: Invalid tag format '$TAG'. Expected chabox-vX.Y.Z"
+            exit 1
+          fi
+          
+          echo "Parsed Version: $VERSION"
+          echo "Parsed Git SHA: $GIT_SHA"
+          echo "Parsed Tag: $TAG"
+          
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "git_sha=$GIT_SHA" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          
+          mkdir -p release-assets
+          mv extracted/chabox-build/payload/chabox-release.apk "release-assets/${TAG}.apk"
+      - name: Generate SHA256 checksums
+        run: |
+          cd release-assets
+          sha256sum *.apk > SHA256SUMS-android.txt
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.parse_info.outputs.tag }}
+          target_commitish: ${{ steps.parse_info.outputs.git_sha }}
+          name: ${{ steps.parse_info.outputs.tag }}
+          draft: true
+          generate_release_notes: true
+          files: |
+            release-assets/*.apk
+            release-assets/SHA256SUMS-android.txt
