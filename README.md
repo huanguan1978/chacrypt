@@ -1,10 +1,34 @@
+<div >
+
+  <a href="https://apps.microsoft.com/detail/9PCQFL3NTV26">
+    <img src="https://img.shields.io/badge/Microsoft-Store-0078D4?style=for-the-badge&logo=microsoft&logoColor=white" alt="Microsoft Store">
+  </a>
+  <a href="https://snapcraft.io/chabox">
+    <img src="https://img.shields.io/badge/Snap-Store-77216F?style=for-the-badge&logo=snapcraft&logoColor=white" alt="Snap Store">
+  </a>
+
+  
+  <a href="https://github.com/huanguan1978/chacrypt/releases">
+    <img src="https://img.shields.io/badge/GitHub-Release-24292e?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Release">
+  </a>
+
+  <!-- 
+  <a href="https://komi.store/search?q=chacrypt">
+    <img src="https://img.shields.io/badge/Komi-Store-ff4757?style=for-the-badge&logo=appstore&logoColor=white" alt="Komi Store">
+  </a>
+  -->
+
+</div>
+
 # ChaCrypt - Modern High-Performance Offline File Security Ecosystem
 
-**English** | [简体中文](./README_zh.md)
+**English** | [Chinese](./README_zh.md)
 
 **ChaCrypt** is an "Offline-First" file security ecosystem designed to protect your data sovereignty. In an era where the Internet is an "insecure highway" filled with surveillance, interception, and leaks, ChaCrypt provides a local fortification to secure your sensitive information before it ever leaves your machine.
 
----
+<div>
+<img src="chabox/doc/img/brand_dark.png" alt="ChaBox-Brand-Dark" style="max-width: 70%; "/>
+</div>
 
 ## 🛡 Why ChaCrypt? The Philosophy
 
@@ -18,7 +42,7 @@ ChaCrypt operates on a **Zero-Trust Local** principle:
 *   **Memory-Level Processing**: We avoid writing temporary plaintext files to disk. Decryption, previewing, and editing happen in RAM whenever possible to prevent physical data fragments.
 *   **Transparency & Auditability**: Using a "Stacked Extension" strategy (e.g., `.tgz.cha`), you can instantly see the exact processing chain (Archived -> Compressed -> Encrypted).
 
----
+
 
 ## ⚡ The Standard: ChaCha20-Poly1305 (AEAD)
 
@@ -27,7 +51,7 @@ We exclusively use the **ChaCha20-Poly1305** standard for all operations. Why?
 *   **Physical-Grade Integrity**: As an AEAD algorithm, it provides a tamper-proof signature for every offline asset. If a file loses a single bit on disk due to hardware failure or malicious modification, decryption fails immediately, ensuring the reliability of stored data.
 *   **Modern Industry Standard**: Adopted by Google and the Linux kernel, it is the modern foundation for high-performance security.
 
----
+
 
 ## 🛠 The Ecosystem
 
@@ -48,7 +72,28 @@ Chapose is a lightweight, professional-grade tool for those who live in the term
 *   **Invisible Workflows**: Seamlessly integrates into CI/CD pipelines via environment variables.
 *   **Orchestration**: Works with `ft:filetools` for complex, automated security audit chains.
 
----
+
+## 📸 Screenshots
+Showing the three beginner-friendly core features.   
+[View the full gallery on our Screenshots Page](chabox/doc/img/README.md).
+
+<table align="center">
+  <tr>
+    <td><img src="chabox/doc/img/home-default.png" alt="Encrypt files, take Secure Notes, and run Secure Erase from one privacy-focused home screen" /></td>
+    <td><img src="chabox/doc/img/home-auto-encrypt.png" alt="Drag in files for automatic detection and one-step encryption to protect sensitive data quickly" /></td>
+    <td><img src="chabox/doc/img/note-list.png" alt="Keep private notes encrypted in one place with a clear, efficient list-based management view" /></td>
+    <td><img src="chabox/doc/img/note-preview.png" alt="Write and preview Markdown in real time within a secure environment for a better private note-taking experience" /></td>
+    <td><img src="chabox/doc/img/wipe-example.png" alt="Use deep overwrite-based Secure Erase to remove sensitive files and reduce recovery risk" /></td>
+  </tr>
+  <tr>
+    <td align="center">All-in-One Privacy Workspace</td>
+    <td align="center">One-Step Drag-and-Drop Encryption</td>
+    <td align="center">Encrypted Secure Notes Management</td>    
+    <td align="center">Real-Time Markdown Preview</td> 
+    <td align="center">Deep Secure Erase</td>        
+  </tr>
+</table>
+
 
 ## 🚀 Installation
 
@@ -60,7 +105,6 @@ See the [Chapose documentation](./chapose/README.md) for the quick binary instal
 ### ChaBox (GUI)
 Prebuilt installers are available for `Windows`, `macOS`, `Linux`, `Android`, and `iOS`. Download the appropriate package from the [ChaBox download page](https://webpath.iche2.com/app/chabox/download_en.html).
 
----
 
 ## 📖 Documentation & Support
 
@@ -69,7 +113,7 @@ Detailed technical guides, configuration manuals, and FAQs are located within th
 *   [ChaBox Documentation](./chabox/README.md)
 *   [Chapose Documentation](./chapose/README.md)
 
----
+
 
 ## 💖 Support the Project
 If you find this tool helpful and would like to see it continue to improve and evolve, please consider showing your support.
@@ -80,7 +124,7 @@ If you find this tool helpful and would like to see it continue to improve and e
 
 *Thank you for your support, which is a vital boost that keeps me focused on the project's continuous iteration; because of you, more people can benefit from this tool much sooner.*
 
----
+
 
 ## ⚖️ License & Philosophy
 
