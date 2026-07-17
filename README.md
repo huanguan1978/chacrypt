@@ -12,11 +12,10 @@
     <img src="https://img.shields.io/badge/GitHub-Release-24292e?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Release">
   </a>
 
-  <!-- 
-  <a href="https://komi.store/search?q=chacrypt">
+  <a href="https://github-store.org/app?repo=huanguan1978/chacrypt">
     <img src="https://img.shields.io/badge/Komi-Store-ff4757?style=for-the-badge&logo=appstore&logoColor=white" alt="Komi Store">
   </a>
-  -->
+
 
 </div>
 
