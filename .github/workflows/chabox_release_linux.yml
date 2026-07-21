@@ -47,54 +47,47 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y file wget libfuse2 
-      - name: Build x64 AppImage
+      - name: Prepare AppDir structure
+        run: |
+          mkdir -p AppDir/usr/share/applications
+          mkdir -p AppDir/usr/share/icons/hicolor/512x512/apps
+          mkdir -p AppDir/usr/share/metainfo
+      - name: Copy Flutter bundle
         run: |
           BUNDLE_DIR=$(find dist/x64 -name "chabox" -type f | head -n 1 | xargs dirname)
           if [ -z "$BUNDLE_DIR" ] || [ ! -d "$BUNDLE_DIR" ]; then
             echo "Error: Could not locate built Flutter binary in dist/x64"
             exit 1
           fi
-
+          echo "BUNDLE_DIR=$BUNDLE_DIR" >> $GITHUB_ENV
+          cp -a "$BUNDLE_DIR"/* AppDir/
+      - name: Extract desktop entry and icons
+        run: |
           ASSETS_DIR="$BUNDLE_DIR/data/flutter_assets/assets"
           if [ ! -d "$ASSETS_DIR" ]; then
             echo "Error: Could not locate flutter assets directory at $ASSETS_DIR"
             exit 1
           fi
-
-          # Create AppDir structure
-          mkdir -p AppDir/usr/share/applications
-          mkdir -p AppDir/usr/share/icons/hicolor/512x512/apps
-          mkdir -p AppDir/usr/share/metainfo
-
-          # 1. Copy Flutter release bundle files into AppDir root
-          cp -a "$BUNDLE_DIR"/* AppDir/
-
-          # 2. Extract desktop entry, icons, and metadata
-          # Copy to standard locations
           cp "$ASSETS_DIR/chabox.desktop" AppDir/usr/share/applications/com.iche2.chabox.desktop
           cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/usr/share/icons/hicolor/512x512/apps/com.iche2.chabox.png
           cp "$ASSETS_DIR/chabox_appstream_metainfo.xml" AppDir/usr/share/metainfo/com.iche2.chabox.metainfo.xml
-          
-          # Copy to AppDir root with names matching the binary for appimagetool auto-detection
           cp "$ASSETS_DIR/chabox.desktop" AppDir/chabox.desktop
           cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/chabox.png
-
-          # 3. Create AppRun entrypoint script
+      - name: Create AppRun
+        run: |
           cat > AppDir/AppRun <<'EOF'
           #!/bin/sh
           SELF=$(readlink -f "$0")
           HERE=${SELF%/*}
-          # Binary is at root, libs are in lib/
           export LD_LIBRARY_PATH="${HERE}/lib:${LD_LIBRARY_PATH}"
           exec "${HERE}/chabox" "$@"
           EOF
           chmod +x AppDir/AppRun
-
-          # 4. Generate AppImage using appimagetool
+      - name: Build AppImage
+        run: |
           wget -q https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-x86_64.AppImage -O appimagetool
           chmod +x appimagetool
           ./appimagetool -v --appimage-extract-and-run AppDir "${{ inputs.tag }}-linux-x86_64.AppImage"
-
       - name: Upload x64 AppImage artifact
         uses: actions/upload-artifact@v4
         with:
@@ -118,54 +111,47 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y file wget libfuse2 
-      - name: Build arm64 AppImage
+      - name: Prepare AppDir structure
+        run: |
+          mkdir -p AppDir/usr/share/applications
+          mkdir -p AppDir/usr/share/icons/hicolor/512x512/apps
+          mkdir -p AppDir/usr/share/metainfo
+      - name: Copy Flutter bundle
         run: |
           BUNDLE_DIR=$(find dist/arm64 -name "chabox" -type f | head -n 1 | xargs dirname)
           if [ -z "$BUNDLE_DIR" ] || [ ! -d "$BUNDLE_DIR" ]; then
             echo "Error: Could not locate built Flutter binary in dist/arm64"
             exit 1
           fi
-
+          echo "BUNDLE_DIR=$BUNDLE_DIR" >> $GITHUB_ENV
+          cp -a "$BUNDLE_DIR"/* AppDir/
+      - name: Extract desktop entry and icons
+        run: |
           ASSETS_DIR="$BUNDLE_DIR/data/flutter_assets/assets"
           if [ ! -d "$ASSETS_DIR" ]; then
             echo "Error: Could not locate flutter assets directory at $ASSETS_DIR"
             exit 1
           fi
-
-          # Create AppDir structure
-          mkdir -p AppDir/usr/share/applications
-          mkdir -p AppDir/usr/share/icons/hicolor/512x512/apps
-          mkdir -p AppDir/usr/share/metainfo
-
-          # 1. Copy Flutter release bundle files into AppDir root
-          cp -a "$BUNDLE_DIR"/* AppDir/
-
-          # 2. Extract desktop entry, icons, and metadata
-          # Copy to standard locations
           cp "$ASSETS_DIR/chabox.desktop" AppDir/usr/share/applications/com.iche2.chabox.desktop
           cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/usr/share/icons/hicolor/512x512/apps/com.iche2.chabox.png
           cp "$ASSETS_DIR/chabox_appstream_metainfo.xml" AppDir/usr/share/metainfo/com.iche2.chabox.metainfo.xml
-          
-          # Copy to AppDir root with names matching the binary for appimagetool auto-detection
           cp "$ASSETS_DIR/chabox.desktop" AppDir/chabox.desktop
           cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/chabox.png
-
-          # 3. Create AppRun entrypoint script
+      - name: Create AppRun
+        run: |
           cat > AppDir/AppRun <<'EOF'
           #!/bin/sh
           SELF=$(readlink -f "$0")
           HERE=${SELF%/*}
-          # Binary is at root, libs are in lib/
           export LD_LIBRARY_PATH="${HERE}/lib:${LD_LIBRARY_PATH}"
           exec "${HERE}/chabox" "$@"
           EOF
           chmod +x AppDir/AppRun
-
-          # 4. Generate AppImage using appimagetool
+      - name: Build AppImage
+        run: |
           wget -q https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-aarch64.AppImage -O appimagetool
           chmod +x appimagetool
           ./appimagetool -v --appimage-extract-and-run AppDir "${{ inputs.tag }}-linux-aarch64.AppImage"
-
       - name: Upload arm64 AppImage artifact
         uses: actions/upload-artifact@v4
         with:
