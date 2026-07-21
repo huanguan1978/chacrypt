@@ -1,0 +1,199 @@
+name: chabox release (linux)
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (format: chabox-vX.Y.Z)'
+        required: true
+        type: string
+      build_run_id:
+        description: Build workflow run ID to consume artifacts from
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  validate:
+    name: Validate Tag Format
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Validate tag format
+        run: |
+          if [[ ! "${{ inputs.tag }}" =~ ^chabox-v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Error: invalid tag format '${{ inputs.tag }}'. Expected chabox-vX.Y.Z"
+            exit 1
+          fi
+
+  package_appimage_x64:
+    name: Build x64 AppImage
+    runs-on: ubuntu-22.04
+    needs: validate
+    steps:
+      - name: Download x64 build artifact
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ inputs.build_run_id }}
+          pattern: chabox-build-linux-x64-*
+          path: dist/x64
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y file wget
+      - name: Build x64 AppImage
+        run: |
+          BUNDLE_DIR=$(find dist/x64 -name "chabox" -type f | head -n 1 | xargs dirname)
+          if [ -z "$BUNDLE_DIR" ] || [ ! -d "$BUNDLE_DIR" ]; then
+            echo "Error: Could not locate built Flutter binary in dist/x64"
+            exit 1
+          fi
+
+          ASSETS_DIR="$BUNDLE_DIR/data/flutter_assets/assets"
+          if [ ! -d "$ASSETS_DIR" ]; then
+            echo "Error: Could not locate flutter assets directory at $ASSETS_DIR"
+            exit 1
+          fi
+
+          mkdir -p AppDir/usr/bin
+          mkdir -p AppDir/usr/share/applications
+          mkdir -p AppDir/usr/share/icons/hicolor/512x512/apps
+          mkdir -p AppDir/usr/share/metainfo
+
+          # 1. Copy Flutter release bundle files into AppDir/usr/bin
+          cp -a "$BUNDLE_DIR"/* AppDir/usr/bin/
+
+          # 2. Extract desktop entry, icons, and metadata from flutter_assets
+          cp "$ASSETS_DIR/chabox.desktop" AppDir/com.iche2.chabox.desktop
+          cp "$ASSETS_DIR/chabox.desktop" AppDir/usr/share/applications/com.iche2.chabox.desktop
+
+          cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/com.iche2.chabox.png
+          cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/usr/share/icons/hicolor/512x512/apps/com.iche2.chabox.png
+
+          cp "$ASSETS_DIR/chabox_appstream_metainfo.xml" AppDir/usr/share/metainfo/com.iche2.chabox.metainfo.xml
+
+          # 3. Create AppRun entrypoint script
+          cat > AppDir/AppRun <<'EOF'
+          #!/bin/sh
+          SELF=$(readlink -f "$0")
+          HERE=${SELF%/*}
+          export PATH="${HERE}/usr/bin:${PATH}"
+          export LD_LIBRARY_PATH="${HERE}/usr/bin/lib:${LD_LIBRARY_PATH}"
+          exec "${HERE}/usr/bin/chabox" "$@"
+          EOF
+          chmod +x AppDir/AppRun
+
+          # 4. Generate AppImage using appimagetool
+          wget -q https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-x86_64.AppImage -O appimagetool
+          chmod +x appimagetool
+          ./appimagetool --appimage-extract-and-run AppDir "${{ inputs.tag }}-linux-x86_64.AppImage"
+
+      - name: Upload x64 AppImage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chabox-appimage-x64
+          retention-days: 1
+          path: ${{ inputs.tag }}-linux-x86_64.AppImage
+
+  package_appimage_arm64:
+    name: Build arm64 AppImage
+    runs-on: ubuntu-24.04-arm
+    needs: validate
+    steps:
+      - name: Download arm64 build artifact
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ inputs.build_run_id }}
+          pattern: chabox-build-linux-arm64-*
+          path: dist/arm64
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y file wget
+      - name: Build arm64 AppImage
+        run: |
+          BUNDLE_DIR=$(find dist/arm64 -name "chabox" -type f | head -n 1 | xargs dirname)
+          if [ -z "$BUNDLE_DIR" ] || [ ! -d "$BUNDLE_DIR" ]; then
+            echo "Error: Could not locate built Flutter binary in dist/arm64"
+            exit 1
+          fi
+
+          ASSETS_DIR="$BUNDLE_DIR/data/flutter_assets/assets"
+          if [ ! -d "$ASSETS_DIR" ]; then
+            echo "Error: Could not locate flutter assets directory at $ASSETS_DIR"
+            exit 1
+          fi
+
+          mkdir -p AppDir/usr/bin
+          mkdir -p AppDir/usr/share/applications
+          mkdir -p AppDir/usr/share/icons/hicolor/512x512/apps
+          mkdir -p AppDir/usr/share/metainfo
+
+          # 1. Copy Flutter release bundle files into AppDir/usr/bin
+          cp -a "$BUNDLE_DIR"/* AppDir/usr/bin/
+
+          # 2. Extract desktop entry, icons, and metadata from flutter_assets
+          cp "$ASSETS_DIR/chabox.desktop" AppDir/com.iche2.chabox.desktop
+          cp "$ASSETS_DIR/chabox.desktop" AppDir/usr/share/applications/com.iche2.chabox.desktop
+
+          cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/com.iche2.chabox.png
+          cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/usr/share/icons/hicolor/512x512/apps/com.iche2.chabox.png
+
+          cp "$ASSETS_DIR/chabox_appstream_metainfo.xml" AppDir/usr/share/metainfo/com.iche2.chabox.metainfo.xml
+
+          # 3. Create AppRun entrypoint script
+          cat > AppDir/AppRun <<'EOF'
+          #!/bin/sh
+          SELF=$(readlink -f "$0")
+          HERE=${SELF%/*}
+          export PATH="${HERE}/usr/bin:${PATH}"
+          export LD_LIBRARY_PATH="${HERE}/usr/bin/lib:${LD_LIBRARY_PATH}"
+          exec "${HERE}/usr/bin/chabox" "$@"
+          EOF
+          chmod +x AppDir/AppRun
+
+          # 4. Generate AppImage using appimagetool
+          wget -q https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-aarch64.AppImage -O appimagetool
+          chmod +x appimagetool
+          ./appimagetool --appimage-extract-and-run AppDir "${{ inputs.tag }}-linux-aarch64.AppImage"
+
+      - name: Upload arm64 AppImage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chabox-appimage-arm64
+          retention-days: 1
+          path: ${{ inputs.tag }}-linux-aarch64.AppImage
+
+  release:
+    name: Draft GitHub Release
+    runs-on: ubuntu-22.04
+    needs: [package_appimage_x64, package_appimage_arm64]
+    steps:
+      - name: Download AppImage artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: chabox-appimage-*
+          path: release-assets
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate SHA256 checksums
+        run: |
+          cd release-assets
+          sha256sum *.AppImage > SHA256SUMS-linux.txt
+      - name: Create or update draft release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag }}
+          name: ${{ inputs.tag }}
+          draft: true
+          generate_release_notes: true
+          files: |
+            release-assets/*.AppImage
+            release-assets/SHA256SUMS-linux.txt
