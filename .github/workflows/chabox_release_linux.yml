@@ -61,31 +61,32 @@ jobs:
             exit 1
           fi
 
-          mkdir -p AppDir/usr/bin
+          # Create AppDir structure
           mkdir -p AppDir/usr/share/applications
           mkdir -p AppDir/usr/share/icons/hicolor/512x512/apps
           mkdir -p AppDir/usr/share/metainfo
 
-          # 1. Copy Flutter release bundle files into AppDir/usr/bin
-          cp -a "$BUNDLE_DIR"/* AppDir/usr/bin/
+          # 1. Copy Flutter release bundle files into AppDir root
+          cp -a "$BUNDLE_DIR"/* AppDir/
 
-          # 2. Extract desktop entry, icons, and metadata from flutter_assets
-          cp "$ASSETS_DIR/chabox.desktop" AppDir/com.iche2.chabox.desktop
+          # 2. Extract desktop entry, icons, and metadata
+          # Copy to standard locations
           cp "$ASSETS_DIR/chabox.desktop" AppDir/usr/share/applications/com.iche2.chabox.desktop
-
-          cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/com.iche2.chabox.png
           cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/usr/share/icons/hicolor/512x512/apps/com.iche2.chabox.png
-
           cp "$ASSETS_DIR/chabox_appstream_metainfo.xml" AppDir/usr/share/metainfo/com.iche2.chabox.metainfo.xml
+          
+          # Copy to AppDir root with names matching the binary for appimagetool auto-detection
+          cp "$ASSETS_DIR/chabox.desktop" AppDir/chabox.desktop
+          cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/chabox.png
 
           # 3. Create AppRun entrypoint script
           cat > AppDir/AppRun <<'EOF'
           #!/bin/sh
           SELF=$(readlink -f "$0")
           HERE=${SELF%/*}
-          export PATH="${HERE}/usr/bin:${PATH}"
-          export LD_LIBRARY_PATH="${HERE}/usr/bin/lib:${LD_LIBRARY_PATH}"
-          exec "${HERE}/usr/bin/chabox" "$@"
+          # Binary is at root, libs are in lib/
+          export LD_LIBRARY_PATH="${HERE}/lib:${LD_LIBRARY_PATH}"
+          exec "${HERE}/chabox" "$@"
           EOF
           chmod +x AppDir/AppRun
 
@@ -131,31 +132,32 @@ jobs:
             exit 1
           fi
 
-          mkdir -p AppDir/usr/bin
+          # Create AppDir structure
           mkdir -p AppDir/usr/share/applications
           mkdir -p AppDir/usr/share/icons/hicolor/512x512/apps
           mkdir -p AppDir/usr/share/metainfo
 
-          # 1. Copy Flutter release bundle files into AppDir/usr/bin
-          cp -a "$BUNDLE_DIR"/* AppDir/usr/bin/
+          # 1. Copy Flutter release bundle files into AppDir root
+          cp -a "$BUNDLE_DIR"/* AppDir/
 
-          # 2. Extract desktop entry, icons, and metadata from flutter_assets
-          cp "$ASSETS_DIR/chabox.desktop" AppDir/com.iche2.chabox.desktop
+          # 2. Extract desktop entry, icons, and metadata
+          # Copy to standard locations
           cp "$ASSETS_DIR/chabox.desktop" AppDir/usr/share/applications/com.iche2.chabox.desktop
-
-          cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/com.iche2.chabox.png
           cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/usr/share/icons/hicolor/512x512/apps/com.iche2.chabox.png
-
           cp "$ASSETS_DIR/chabox_appstream_metainfo.xml" AppDir/usr/share/metainfo/com.iche2.chabox.metainfo.xml
+          
+          # Copy to AppDir root with names matching the binary for appimagetool auto-detection
+          cp "$ASSETS_DIR/chabox.desktop" AppDir/chabox.desktop
+          cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/chabox.png
 
           # 3. Create AppRun entrypoint script
           cat > AppDir/AppRun <<'EOF'
           #!/bin/sh
           SELF=$(readlink -f "$0")
           HERE=${SELF%/*}
-          export PATH="${HERE}/usr/bin:${PATH}"
-          export LD_LIBRARY_PATH="${HERE}/usr/bin/lib:${LD_LIBRARY_PATH}"
-          exec "${HERE}/usr/bin/chabox" "$@"
+          # Binary is at root, libs are in lib/
+          export LD_LIBRARY_PATH="${HERE}/lib:${LD_LIBRARY_PATH}"
+          exec "${HERE}/chabox" "$@"
           EOF
           chmod +x AppDir/AppRun
 
