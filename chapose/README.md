@@ -16,7 +16,7 @@ Then verify it with:
 chapose --version
 ```
 
-For binary compatibility notes, source build installation, and troubleshooting, see the full installation guide in [./doc/en/README.md](./doc/en/README.md).
+For package manager installation (macOS Homebrew / Windows winget), binary compatibility notes, source build instructions, and troubleshooting, see the full documentation in [./doc/en/README.md](./doc/en/README.md).
 
 ---
 

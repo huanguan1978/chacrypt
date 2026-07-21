@@ -16,7 +16,7 @@ curl -fsSL https://raw.githubusercontent.com/huanguan1978/chacrypt/main/chapose/
 chapose --version
 ```
 
-如需查看二进制兼容性说明、源码编译安装方式与安装排错说明，请阅读完整文档 [./doc/zh/README.md](./doc/zh/README.md)。
+如需查看包管理器安装方式（macOS Homebrew / Windows winget）、二进制兼容性说明、源码编译及排错指引，请阅读完整文档 [./doc/zh/README.md](./doc/zh/README.md)。
 
 ---
 

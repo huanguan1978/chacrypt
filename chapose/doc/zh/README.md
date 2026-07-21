@@ -9,7 +9,8 @@
 ## 安装说明
 
 ### 二进制安装
-使用发布的二进制包并安装到本地默认路径：
+
+**通用的远程脚本安装**（适用于 Linux、macOS 以及 Windows 下的 Git Bash / MSYS2）：
 ```sh
 curl -fsSL https://raw.githubusercontent.com/huanguan1978/chacrypt/main/chapose/install.sh | sh -s -- --version 1.0.0
 ```
@@ -21,6 +22,19 @@ curl -fsSL https://raw.githubusercontent.com/huanguan1978/chacrypt/main/chapose/
 chapose --version
 ```
 如果安装目录尚未加入 `PATH`，脚本会输出对应的添加命令。
+
+**macOS 平台（Homebrew 包管理器）**：
+可通过自定义 Tap 仓库安装（详见 [Homebrew Tap](https://github.com/huanguan1978/homebrew-tap) 仓库说明）：
+```sh
+brew tap huanguan1978/tap
+brew install chapose
+```
+
+**Windows 平台（winget 包管理器）**：
+在 Windows 终端中运行以下命令直接安装：
+```cmd
+winget install gai.chapose
+```
 
 ### 二进制兼容性说明
 *   发布的二进制文件由 CI 针对特定操作系统与 CPU 目标构建。

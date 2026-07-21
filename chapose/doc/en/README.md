@@ -9,7 +9,8 @@
 ## Installation
 
 ### Binary Install
-Install the released binary to the default local path:
+
+**Universal Script Install** (for Linux, macOS, and Windows Git Bash / MSYS2):
 ```sh
 curl -fsSL https://raw.githubusercontent.com/huanguan1978/chacrypt/main/chapose/install.sh | sh -s -- --version 1.0.0
 ```
@@ -21,6 +22,19 @@ Verify the installation:
 chapose --version
 ```
 If the install directory is not already in your `PATH`, the script prints the exact command needed to add it.
+
+**macOS Platform (Homebrew Package Manager)**:
+Install via custom Tap repository (see [Homebrew Tap](https://github.com/huanguan1978/homebrew-tap) repository for details):
+```sh
+brew tap huanguan1978/tap
+brew install chapose
+```
+
+**Windows Platform (winget Package Manager)**:
+Run the following command in Windows terminal to install directly:
+```cmd
+winget install gai.chapose
+```
 
 ### Binary Compatibility Notes
 *   Release binaries are built in CI for specific operating system and CPU targets.
