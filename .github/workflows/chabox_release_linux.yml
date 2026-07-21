@@ -85,7 +85,7 @@ jobs:
           chmod +x AppDir/AppRun
       - name: Build AppImage
         run: |
-          wget -q https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-x86_64.AppImage -O appimagetool
+          wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O appimagetool
           chmod +x appimagetool
           ./appimagetool -v --appimage-extract-and-run AppDir "${{ inputs.tag }}-linux-x86_64.AppImage"
       - name: Upload x64 AppImage artifact
@@ -149,7 +149,7 @@ jobs:
           chmod +x AppDir/AppRun
       - name: Build AppImage
         run: |
-          wget -q https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-aarch64.AppImage -O appimagetool
+          wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-aarch64.AppImage -O appimagetool
           chmod +x appimagetool
           ./appimagetool -v --appimage-extract-and-run AppDir "${{ inputs.tag }}-linux-aarch64.AppImage"
       - name: Upload arm64 AppImage artifact
