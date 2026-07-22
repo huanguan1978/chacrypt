@@ -23,6 +23,7 @@ jobs:
   validate:
     name: Validate Tag Format
     runs-on: ubuntu-22.04
+    needs: []
     steps:
       - name: Validate tag format
         run: |
@@ -50,7 +51,7 @@ jobs:
       - name: Prepare AppDir structure
         run: |
           mkdir -p AppDir/usr/share/applications
-          mkdir -p AppDir/usr/share/icons/hicolor/512x512/apps
+          mkdir -p AppDir/usr/share/icons/hicolor/scalable/apps
           mkdir -p AppDir/usr/share/metainfo
       - name: Copy Flutter bundle
         run: |
@@ -70,9 +71,8 @@ jobs:
             exit 1
           fi
           cp "$ASSETS_DIR/chabox.desktop" AppDir/usr/share/applications/com.iche2.chabox.desktop
-          cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/usr/share/icons/hicolor/512x512/apps/com.iche2.chabox.png
+          cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/usr/share/icons/hicolor/scalable/apps/com.iche2.chabox.png
           cp "$ASSETS_DIR/chabox_appstream_metainfo.xml" AppDir/usr/share/metainfo/com.iche2.chabox.metainfo.xml
-          cp "$ASSETS_DIR/chabox_appstream_metainfo.xml" AppDir/usr/share/metainfo/chabox.appdata.xml
           
           # Copy to AppDir root with names matching the desktop file's expectations
           cp "$ASSETS_DIR/chabox.desktop" AppDir/chabox.desktop
@@ -90,11 +90,10 @@ jobs:
       - name: Build AppImage
         run: |
           wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O appimagetool
+          wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/runtime-x86_64 -O runtime-x86_64
           chmod +x appimagetool
-          # Debug: list AppDir content
-          ls -R AppDir
           export ARCH=x86_64
-          ./appimagetool -v --appimage-extract-and-run AppDir "${{ inputs.tag }}-linux-x86_64.AppImage"
+          ./appimagetool -v --runtime-file runtime-x86_64 --appimage-extract-and-run AppDir "${{ inputs.tag }}-linux-x86_64.AppImage"
       - name: Upload x64 AppImage artifact
         uses: actions/upload-artifact@v4
         with:
@@ -121,7 +120,7 @@ jobs:
       - name: Prepare AppDir structure
         run: |
           mkdir -p AppDir/usr/share/applications
-          mkdir -p AppDir/usr/share/icons/hicolor/512x512/apps
+          mkdir -p AppDir/usr/share/icons/hicolor/scalable/apps
           mkdir -p AppDir/usr/share/metainfo
       - name: Copy Flutter bundle
         run: |
@@ -141,9 +140,8 @@ jobs:
             exit 1
           fi
           cp "$ASSETS_DIR/chabox.desktop" AppDir/usr/share/applications/com.iche2.chabox.desktop
-          cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/usr/share/icons/hicolor/512x512/apps/com.iche2.chabox.png
+          cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/usr/share/icons/hicolor/scalable/apps/com.iche2.chabox.png
           cp "$ASSETS_DIR/chabox_appstream_metainfo.xml" AppDir/usr/share/metainfo/com.iche2.chabox.metainfo.xml
-          cp "$ASSETS_DIR/chabox_appstream_metainfo.xml" AppDir/usr/share/metainfo/chabox.appdata.xml
           
           # Copy to AppDir root with names matching the desktop file's expectations
           cp "$ASSETS_DIR/chabox.desktop" AppDir/chabox.desktop
@@ -161,11 +159,10 @@ jobs:
       - name: Build AppImage
         run: |
           wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-aarch64.AppImage -O appimagetool
+          wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/runtime-aarch64 -O runtime-aarch64
           chmod +x appimagetool
-          # Debug: list AppDir content
-          ls -R AppDir
           export ARCH=aarch64
-          ./appimagetool -v --appimage-extract-and-run AppDir "${{ inputs.tag }}-linux-aarch64.AppImage"
+          ./appimagetool -v --runtime-file runtime-aarch64 --appimage-extract-and-run AppDir "${{ inputs.tag }}-linux-aarch64.AppImage"
       - name: Upload arm64 AppImage artifact
         uses: actions/upload-artifact@v4
         with:
