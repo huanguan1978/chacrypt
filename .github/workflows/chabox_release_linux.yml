@@ -72,6 +72,7 @@ jobs:
           cp "$ASSETS_DIR/chabox.desktop" AppDir/usr/share/applications/com.iche2.chabox.desktop
           cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/usr/share/icons/hicolor/512x512/apps/com.iche2.chabox.png
           cp "$ASSETS_DIR/chabox_appstream_metainfo.xml" AppDir/usr/share/metainfo/com.iche2.chabox.metainfo.xml
+          cp "$ASSETS_DIR/chabox_appstream_metainfo.xml" AppDir/usr/share/metainfo/chabox.appdata.xml
           
           # Copy to AppDir root with names matching the desktop file's expectations
           cp "$ASSETS_DIR/chabox.desktop" AppDir/chabox.desktop
@@ -92,7 +93,8 @@ jobs:
           chmod +x appimagetool
           # Debug: list AppDir content
           ls -R AppDir
-          ARCH=x86_64 ./appimagetool -v --appimage-extract-and-run AppDir "${{ inputs.tag }}-linux-x86_64.AppImage"
+          export ARCH=x86_64
+          ./appimagetool -v --appimage-extract-and-run AppDir "${{ inputs.tag }}-linux-x86_64.AppImage"
       - name: Upload x64 AppImage artifact
         uses: actions/upload-artifact@v4
         with:
@@ -141,6 +143,7 @@ jobs:
           cp "$ASSETS_DIR/chabox.desktop" AppDir/usr/share/applications/com.iche2.chabox.desktop
           cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/usr/share/icons/hicolor/512x512/apps/com.iche2.chabox.png
           cp "$ASSETS_DIR/chabox_appstream_metainfo.xml" AppDir/usr/share/metainfo/com.iche2.chabox.metainfo.xml
+          cp "$ASSETS_DIR/chabox_appstream_metainfo.xml" AppDir/usr/share/metainfo/chabox.appdata.xml
           
           # Copy to AppDir root with names matching the desktop file's expectations
           cp "$ASSETS_DIR/chabox.desktop" AppDir/chabox.desktop
@@ -161,7 +164,8 @@ jobs:
           chmod +x appimagetool
           # Debug: list AppDir content
           ls -R AppDir
-          ARCH=aarch64 ./appimagetool -v --appimage-extract-and-run AppDir "${{ inputs.tag }}-linux-aarch64.AppImage"
+          export ARCH=aarch64
+          ./appimagetool -v --appimage-extract-and-run AppDir "${{ inputs.tag }}-linux-aarch64.AppImage"
       - name: Upload arm64 AppImage artifact
         uses: actions/upload-artifact@v4
         with:
