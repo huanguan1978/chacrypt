@@ -23,7 +23,6 @@ jobs:
   validate:
     name: Validate Tag Format
     runs-on: ubuntu-22.04
-    needs: []
     steps:
       - name: Validate tag format
         run: |
@@ -61,7 +60,6 @@ jobs:
             exit 1
           fi
           echo "BUNDLE_DIR=$BUNDLE_DIR" >> $GITHUB_ENV
-          # Copy to root of AppDir
           cp -a "$BUNDLE_DIR"/* AppDir/
       - name: Extract desktop entry and icons
         run: |
@@ -73,8 +71,6 @@ jobs:
           cp "$ASSETS_DIR/chabox.desktop" AppDir/usr/share/applications/com.iche2.chabox.desktop
           cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/usr/share/icons/hicolor/scalable/apps/com.iche2.chabox.png
           cp "$ASSETS_DIR/chabox_appstream_metainfo.xml" AppDir/usr/share/metainfo/com.iche2.chabox.metainfo.xml
-          
-          # Copy to AppDir root with names matching the desktop file's expectations
           cp "$ASSETS_DIR/chabox.desktop" AppDir/chabox.desktop
           cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/com.iche2.chabox.png
       - name: Create AppRun
@@ -92,8 +88,7 @@ jobs:
           wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O appimagetool
           wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/runtime-x86_64 -O runtime-x86_64
           chmod +x appimagetool
-          export ARCH=x86_64
-          ./appimagetool -v --runtime-file runtime-x86_64 AppDir "${{ inputs.tag }}-linux-x86_64.AppImage"
+          ARCH=x86_64 ./appimagetool -v --runtime-file runtime-x86_64 AppDir "${{ inputs.tag }}-linux-x86_64.AppImage"
       - name: Upload x64 AppImage artifact
         uses: actions/upload-artifact@v4
         with:
@@ -130,7 +125,6 @@ jobs:
             exit 1
           fi
           echo "BUNDLE_DIR=$BUNDLE_DIR" >> $GITHUB_ENV
-          # Copy to root of AppDir
           cp -a "$BUNDLE_DIR"/* AppDir/
       - name: Extract desktop entry and icons
         run: |
@@ -142,8 +136,6 @@ jobs:
           cp "$ASSETS_DIR/chabox.desktop" AppDir/usr/share/applications/com.iche2.chabox.desktop
           cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/usr/share/icons/hicolor/scalable/apps/com.iche2.chabox.png
           cp "$ASSETS_DIR/chabox_appstream_metainfo.xml" AppDir/usr/share/metainfo/com.iche2.chabox.metainfo.xml
-          
-          # Copy to AppDir root with names matching the desktop file's expectations
           cp "$ASSETS_DIR/chabox.desktop" AppDir/chabox.desktop
           cp "$ASSETS_DIR/chabox_icon_rounded_512x512.png" AppDir/com.iche2.chabox.png
       - name: Create AppRun
@@ -161,8 +153,7 @@ jobs:
           wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-aarch64.AppImage -O appimagetool
           wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/runtime-aarch64 -O runtime-aarch64
           chmod +x appimagetool
-          export ARCH=aarch64
-          ./appimagetool -v --runtime-file runtime-aarch64 AppDir "${{ inputs.tag }}-linux-aarch64.AppImage"
+          ARCH=aarch64 ./appimagetool -v --runtime-file runtime-aarch64 AppDir "${{ inputs.tag }}-linux-aarch64.AppImage"
       - name: Upload arm64 AppImage artifact
         uses: actions/upload-artifact@v4
         with:
@@ -175,6 +166,8 @@ jobs:
     runs-on: ubuntu-22.04
     needs: [package_appimage_x64, package_appimage_arm64]
     steps:
+      - name: Clean release directory
+        run: rm -rf release-assets && mkdir -p release-assets
       - name: Download AppImage artifacts
         uses: actions/download-artifact@v4
         with:
@@ -186,13 +179,23 @@ jobs:
         run: |
           cd release-assets
           sha256sum *.AppImage > SHA256SUMS-linux.txt
-      - name: Create or update draft release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ inputs.tag }}
-          name: ${{ inputs.tag }}
-          draft: true
-          generate_release_notes: true
-          files: |
-            release-assets/*.AppImage
-            release-assets/SHA256SUMS-linux.txt
+      - name: Create or Update GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          # Attempt to create the release. If it fails (e.g., already exists), upload assets instead.
+          if ! gh release create "${{ inputs.tag }}" \
+            --repo "${{ github.repository }}" \
+            --title "${{ inputs.tag }}" \
+            --draft \
+            --generate-notes \
+            release-assets/*.AppImage \
+            release-assets/SHA256SUMS-linux.txt; then
+            
+            echo "Release '${{ inputs.tag }}' already exists. Uploading assets..."
+            gh release upload "${{ inputs.tag }}" \
+              --repo "${{ github.repository }}" \
+              --clobber \
+              release-assets/*.AppImage \
+              release-assets/SHA256SUMS-linux.txt
+          fi
